@@ -1,0 +1,475 @@
+html {
+    scroll-behavior: smooth;
+    user-select: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    background-color: darkslategray;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.stripes {
+    position: fixed;
+    height: 15vh;
+    width: 5vw;
+    left: -5vw;
+    z-index: -1;
+
+    background-image: linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%) 27% 73%, rgb(0, 0, 0, 0%) 75% 100%);
+}
+
+.project-shadow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 250px;
+    width: 250px;
+    border-radius: 25px;
+    background-image: linear-gradient(90deg, rgb(0, 0, 0, 0%) 0% 20%, rgb(0, 0, 0, 40%), rgb(0, 0, 0, 60%));
+}
+
+.emoji-still {
+    visibility: hidden;
+    font-style: normal;
+}
+
+.emoji-animated {
+    position: absolute;
+    font-style: normal;
+    top: 6vh;
+}
+
+.icon-load {
+    visibility: hidden;
+    animation: fade-in 1s;
+}
+
+.hl-blue {
+    color: lightblue;
+}
+
+.hl-gold {
+    border-radius: 10px;
+    font-weight: bold;
+    color: navy;
+    background-color: rgb(255, 255, 0, 30%);
+}
+
+.hl-gray {
+    border-radius: 10px;
+    font-style: italic;
+    color: plum;
+    background-color: rgb(0, 0, 0, 30%);
+}
+
+.project-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 255px;
+    width: 255px;
+}
+
+.blank-curtain {
+    height: 255px;
+    width: 255px;
+    position: absolute;
+    visibility: hidden;
+    z-index: 1;
+    border-radius: 25px;
+    background-color: transparent;
+}
+
+.project-face,
+.project-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    width: 250px;
+    border: 2px solid gold;
+    border-radius: 25px;
+    position: absolute;
+    transition-duration: 2s;
+
+    font: bold 24px "Play";
+    text-align: center;
+    color: gold;
+    background-color: darkslateblue;
+}
+
+.project-info {
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+
+    font-size: 14px;
+    font-weight: normal;
+    color: whitesmoke;
+    background-color: brown;
+}
+
+.project-box:hover .project-face {
+    transition-duration: 0.5s;
+    transform: rotateY(180deg);
+}
+
+.project-box:hover .project-info {
+    transition-duration: 0.5s;
+    transform: rotateY(0deg);
+}
+
+.project-image {
+    width: 150px;
+    height: 150px;
+    border: 2px solid aqua;
+    border-radius: 100%;
+}
+
+.project-title {
+    margin-top: 10px;
+}
+
+.project-text {
+    width: 225px;
+}
+
+.project-link {
+    margin-top: -15px;
+}
+
+#tool-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: fixed;
+    height: 15vh;
+    width: 100vw;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+
+    background-color: navy
+}
+
+#title-border {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1vw;
+    height: 10vh;
+    width: 22vw;
+
+    border: 0.5vh outset gold;
+    border-radius: 1vh;
+    background-color: brown;
+}
+
+#title-border:hover {
+    cursor: pointer;
+    border-color: aqua;
+}
+
+#title-text {
+    width: 22vw;
+    font: bold 2.5vw "Abril";
+    text-align: center;
+    color: wheat;
+}
+
+#links-div {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    margin-left: 1vw;
+    width: 10vw;
+    gap: 0.5vh;
+}
+
+#github-link,
+#linkedin-link {
+    height: 1.5vw;
+    width: 1.5vw;
+    font-size: 0px;
+}
+
+#github-icon-link,
+#gmail-icon-link,
+#linkedin-icon-link {
+    height: 1.5vw;
+    width: 1.5vw;
+    cursor: pointer;
+}
+
+#github-icon-link {
+    border-radius: 100%;
+    background-color: white;
+}
+
+#tool-bar-stripes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#introduction {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20vh;
+    gap: 10px;
+}
+
+#about-me-container, #skill-container {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: 10px;
+}
+
+#about-me, #qualification {
+    width: 700px;
+    border: 15px solid bisque;
+    border-radius: 25px;
+    background-color: bisque;
+}
+
+#about-me-title {
+    width: fit-content;
+    font: italic bold 36px "Play";
+    color: navy;
+}
+
+#qualification-title {
+    width: fit-content;
+    font: bold 36px "Play";
+    color: darkred;
+}
+
+#emoji-anchor {
+    opacity: 0.0;
+}
+
+#icon-anchor {
+    width: 0px;
+    height: 50px;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+#personal-background {
+    border: 15px solid rgb(0, 0, 0, 0%);
+    border-radius: 25px;
+
+    font: italic 500 16px "Lora";
+    text-align: center;
+    color: navy;
+    background-color: rgb(128, 128, 128, 75%);
+}
+
+#skill-background {
+    border: 15px solid rgb(0, 0, 0, 0%);
+    border-radius: 25px;
+
+    font: 500 16px "Lora";
+    text-align: center;
+    color: darkred;
+    background-color: rgb(128, 128, 128, 75%);
+}
+
+#projects {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 100px;
+}
+
+#projects-background {
+    padding: 20px;
+    border: 4px solid purple;
+    border-radius: 100px;
+    background-image: linear-gradient(90deg, rgb(255, 255, 255), rgb(0, 0, 0, 25%));
+}
+
+#project-title-border {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#project-title-text {
+    border: 6px double orange;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    font: bold 48px "Cairo Play";
+    text-align: center;
+    color: aliceblue;
+    background-color: darkslategray;
+}
+
+#project-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    margin-bottom: 50px;
+    gap: 50px;
+}
+
+#left-button-border,
+#right-button-border {
+    height: 50px;
+    width: 50px;
+    border: 4px outset aqua;
+    border-radius: 50%;
+    animation: clock-rotate 3s infinite;
+}
+
+#right-button-border {
+    border-style: inset;
+}
+
+#left-button,
+#right-button {
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    padding-bottom: 4px;
+
+    font-size: 28px;
+    color: aqua;
+    background-color: darkslategray;
+    animation: counter-clock-rotate 3s infinite;
+}
+
+#left-button {
+    padding-right: 8px;
+}
+
+#right-button {
+    padding-left: 8px;
+}
+
+#left-button:hover,
+#right-button:hover {
+    background-color: black;
+}
+
+#left-button-border:active,
+#right-button-border:active {
+    border-color: gold;
+}
+
+#left-button-border:active #left-button,
+#right-button-border:active #right-button {
+    color: gold;
+}
+
+#copy-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    position: fixed;
+    height: 8vh;
+    width: 100vw;
+    left: 0px;
+    bottom: 0px;
+    z-index: 1;
+
+    background-color: black;
+}
+
+#copy-right-text {
+    margin-left: 1vw;
+
+    font: bold 2.5vh "Poiret One";
+    color: white;
+}
+
+@font-face {
+    font-family: "Abril";
+    src: url(./fonts/Abril_Fatface/AbrilFatface-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Cairo Play";
+    src: url(./fonts/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf);
+}
+
+@font-face {
+    font-family: "Georama";
+    src: url(./fonts/Georama/Georama-VariableFont_wdth\,wght.ttf);
+}
+
+@font-face {
+    font-family: "Lora";
+    src: url(./fonts/Lora/Lora-VariableFont_wght.ttf);
+}
+
+@font-face {
+    font-family: "Play";
+    src: url(./fonts/Play/Play-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Poiret One";
+    src: url(./fonts/Poiret_One/PoiretOne-Regular.ttf);
+}
+
+@keyframes clock-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}
+
+@keyframes counter-clock-rotate {
+    from {transform: rotate(359deg);}
+    to {transform: rotate(0deg);}
+}
+
+@keyframes descent {
+    form {transform: translateY(0%);}
+    to {transform: translateY(250%);}
+}
+
+@keyframes fade-in {
+    0% {visibility: visible; opacity: 0.01;}
+    100% {visibility: visible; opacity: 1;}
+}
+
+@keyframes slide1 {
+    form {transform: translateX(0%);}
+    to {transform: translateX(350%);}
+}
+
+@keyframes slide2 {
+    form {transform: translateX(0%);}
+    to {transform: translateX(233.5%);}
+}
+
+@keyframes slide3 {
+    form {transform: translateX(0%);}
+    to {transform: translateX(116.5%);}
+}
+
+@keyframes slide4 {
+    form {transform: translateX(0%);}
+    to {transform: translateX(0%);}
+}

@@ -1,0 +1,330 @@
+html {
+    scroll-behavior: smooth;
+    user-select: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    background-color: darkslategray;
+}
+
+th {
+    border: 3px solid navy;
+    padding: 10px;
+    font: 24px "Abril";
+}
+
+td {
+    max-width: 200px;
+    border: 2px solid purple;
+    padding: 10px;
+    word-wrap: break-word;
+
+    font: 18px "Play";
+    text-align: center;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.stripes {
+    position: fixed;
+    height: 15vh;
+    width: 5vw;
+    left: -5vw;
+    z-index: -1;
+
+    background-image: linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%) 27% 73%, rgb(0, 0, 0, 0%) 75% 100%);
+}
+
+.bubble {
+    position: fixed;
+    visibility: hidden;
+    margin-top: 35vh;
+    font: bold 3.5vw "Abril";
+    color: bisque;
+}
+
+.chapter-title {
+    font: bold 28px "Georama";
+    color: purple;
+}
+
+.chapter-content {
+    margin-bottom: 10px;
+    font-family: "Lora";
+    text-align: justify;
+    color: navy;
+}
+
+.link-display-text {
+    margin-bottom: 20px;
+    font: 20px "Georama";
+    color: orange;
+}
+
+.link-display-link {
+    color: gold;
+}
+
+.link-display-link:hover {
+    color: goldenrod;
+}
+
+.center-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+}
+
+.code-snippet {
+    margin: 10px;
+    border: 15px solid rgb(50, 50, 50);
+    border-radius: 25px;
+    user-select: text;
+
+    font: 14px "Consolas";
+    color: bisque;
+    background-color: rgb(50, 50, 50);
+}
+
+#tool-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: fixed;
+    height: 15vh;
+    width: 100vw;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+
+    background-color: navy
+}
+
+#title-border {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1vw;
+    height: 10vh;
+    width: 22vw;
+
+    border: 0.5vh outset gold;
+    border-radius: 1vh;
+    background-color: brown;
+}
+
+#title-border:hover {
+    cursor: pointer;
+    border-color: aqua;
+}
+
+#title-text {
+    width: 22vw;
+    font: bold 2.5vw "Abril";
+    text-align: center;
+    color: wheat;
+}
+
+#links-div {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    margin-left: 1vw;
+    width: 10vw;
+    gap: 0.5vh;
+}
+
+#github-link,
+#linkedin-link {
+    height: 1.5vw;
+    width: 1.5vw;
+    font-size: 0px;
+}
+
+#github-icon-link,
+#gmail-icon-link,
+#linkedin-icon-link {
+    height: 1.5vw;
+    width: 1.5vw;
+    cursor: pointer;
+}
+
+#github-icon-link {
+    border-radius: 100%;
+    background-color: white;
+}
+
+#tool-bar-stripes {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: fixed;
+    user-select: none;
+    width: 100vw;
+    height: 100vh;
+    top: 15vh;
+    left: 0;
+    z-index: 1;
+    animation: loading-screen 500ms 1;
+    animation-delay: 3500ms;
+    background-color: rgb(100, 100, 100);
+}
+
+#loading-message {
+    width: fit-content;
+    height: fit-content;
+    margin-top: 27.5vh;
+    padding: 0.5vw;
+    border: 0.5vw double gold;
+    border-radius: 1.5vw;
+
+    font: italic bold 1.5vw "Play";
+    color: bisque;
+    background-color: black;
+}
+
+#project-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15vh;
+}
+
+#project-title {
+    border: 2px solid gold;
+    border-radius: 20px;
+    padding: 6px;
+    font: bold 48px "Lora";
+    color: gold;
+    background-color: darkmagenta;
+}
+
+#project-overview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 1000px;
+    margin: 25px;
+}
+
+#project-skills {
+    padding: 8px;
+    height: 350px;
+    width: 500px;
+    border: 4px groove gold;
+    background-color: wheat;
+}
+
+#project-table-of-contents-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 350px;
+    width: 350px;
+    border: 4px solid seagreen;
+    border-radius: 25px;
+    background-color: wheat;
+}
+
+#project-table-of-contents {
+    padding: 4px;
+    font: 18px "Play";
+    text-align: justify;
+}
+
+#project-text {
+    width: 1000px;
+    margin-bottom: 100px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid purple;
+
+    font: 18px "Georama";
+    color: darkblue;
+    background-color: rgb(150, 150, 150, 70%);
+}
+
+#copy-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    position: fixed;
+    height: 8vh;
+    width: 100vw;
+    left: 0px;
+    bottom: 0px;
+    z-index: 1;
+
+    background-color: black;
+}
+
+#copy-right-text {
+    margin-left: 1vw;
+
+    font: bold 2.5vh "Poiret One";
+    color: white;
+}
+
+@font-face {
+    font-family: "Abril";
+    src: url(./fonts/Abril_Fatface/AbrilFatface-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Cairo Play";
+    src: url(./fonts/Cairo_Play/CairoPlay-VariableFont_slnt\,wght.ttf);
+}
+
+@font-face {
+    font-family: "Georama";
+    src: url(./fonts/Georama/Georama-VariableFont_wdth\,wght.ttf);
+}
+
+@font-face {
+    font-family: "Lora";
+    src: url(./fonts/Lora/Lora-VariableFont_wght.ttf);
+}
+
+@font-face {
+    font-family: "Play";
+    src: url(./fonts/Play/Play-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Poiret One";
+    src: url(./fonts/Poiret_One/PoiretOne-Regular.ttf);
+}
+
+@keyframes clock-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}
+
+@keyframes counter-clock-rotate {
+    from {transform: rotate(359deg);}
+    to {transform: rotate(0deg);}
+}
+
+@keyframes loading-screen {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}

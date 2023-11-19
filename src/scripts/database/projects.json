@@ -1,0 +1,34 @@
+[
+    {
+        "title": "Portfolio Website",
+        "image": "../media/images/projects/portfolio/portfolio.png",
+        "abstract": "My portfolio website displays my projects and talks about me and my technical skills. Each project on display has a brief project summary with a link to a detailed breakdown. My portfolio website is designed and developed from scratch. The organization and animations of my portfolio show my ability to structure and style an HTML file with CSS. I use JavaScript to manipulate the HTML and make the website interactive.",
+        "link": "./project.html",
+        "skill": ["JavaScript", "Manipulate HTML elements and shadow DOM parts of a page.", "HTML5", "Make the framework of the webpages.", "CSS3", "Modify the apperance of the webpages and apply animations."],
+        "text": "../scripts/database/portfolio.txt"
+    },
+    {
+        "title": "LeetCode Webpage",
+        "image": "../media/images/projects/leetcode/leetcode.png",
+        "abstract": "Example 123, Hello world!",
+        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+    },
+    {
+        "title": "Java JPanel Editor",
+        "image": "../media/images/about-me/java-icon.png",
+        "abstract": "Example 123, Hello world!",
+        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+    },
+    {
+        "title": "Chess Bot in C",
+        "image": "../media/images/about-me/c-icon.png",
+        "abstract": "Example 123, Hello world!",
+        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+    },
+    {
+        "title": "Java GPA Calculator",
+        "image": "../media/images/about-me/javascript-icon.png",
+        "abstract": "Example 123, Hello world!",
+        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+    }
+]
