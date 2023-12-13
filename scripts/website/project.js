@@ -104,7 +104,7 @@ function returnHome() {
     const homeTitleRef = document.getElementById('title-border');
 
     homeTitleRef.addEventListener('click', function() {
-        window.location = './index.html';
+        window.location = '../index.html';
     });
 }
 
@@ -210,7 +210,7 @@ function mediaBuilder(projectText, idx) {
     const mediaType = request.slice(3);
 
     // Valid media tags are links, images, and code snippets.
-    if (mediaType.localeCompare("Link\r") == 0) {
+    if (mediaType.localeCompare("Link") == 0 || mediaType.localeCompare("Link\r") == 0) {
         let newLink = document.createElement('a'), line = (projectText[idx + n++]).split(" ");
         newLink.textContent = line.pop();
         newLink.href = projectText[idx + n++];
@@ -220,7 +220,7 @@ function mediaBuilder(projectText, idx) {
         newSnip.textContent = line.join(" ") + " ";
         newSnip.appendChild(newLink);
         newSnip.setAttribute('class', 'link-display-text');
-    } else if (mediaType.localeCompare("Image\r") == 0) {
+    } else if (mediaType.localeCompare("Image") == 0 || mediaType.localeCompare("Image\r") == 0) {
         let newImage = new Image(), sizeChart = {"Small\r": "20%", "Medium\r": "50%", "Large\r": "70%"}
         newImage.src = projectText[idx + n++];
 
@@ -229,7 +229,7 @@ function mediaBuilder(projectText, idx) {
         else newImage.style.width = sizeChart["Medium\r"];
         newSnip.appendChild(newImage);
         newSnip.setAttribute('class', 'center-image');
-    } else if (mediaType.localeCompare("Code\r") == 0) {
+    } else if (mediaType.localeCompare("Code") == 0 || mediaType.localeCompare("Code\r") == 0) {
         newSnip.setAttribute('class', 'code-snippet');
 
         while (projectText[idx + n].charCodeAt(0) != 96) {

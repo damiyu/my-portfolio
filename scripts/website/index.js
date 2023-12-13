@@ -297,7 +297,6 @@ function projectSelect(projectNums) {
 
     for (let i = 0; i < n; i++) {
         projectLinksRef[i].addEventListener('click', function() {
-            console.log(projectNums[i]);
             localStorage.setItem('project-idx', projectNums[i]);
         });
     }
