@@ -1,0 +1,315 @@
+Breakdown Last Updated: Nov 23, 2023
+```Link
+Link to project repository: Repository
+https://github.com/damiyu/my-portfolio
+```
+
+# Purpose:
+The courses I took in college have taught me data structures + advanced algorithms, computer architecture, software development, machine learning, etc.
+After taking these classes, I wanted to apply my skills by creating independent projects to showcase my knowledge.
+These projects allowed me to explore more complex topics and expand my skill set.
+I planned to use open-source templates to generate a website to host my projects.
+Instead, I decided to create my portfolio from scratch so I could improve my JavaScript/HTML5/CSS3 skills.
+Additionally, I got the opportunity to explore new tools like web APIs, Figma, and React.js.
+
+# Concept and User Interface:
+I wanted a simple website to host my projects, explain my projects, and give a brief introduction about myself.
+To begin, I would need to create a home page and a project page.
+I decided to split information about me into two categories: personal and technical.
+These two paragraphs will be presented at the top of the home page.
+Below my introduction, I wanted to show my projects through a sliding project window.
+These project panels would be interactive and would contain an abstract of the project and a link to the project page.
+The project page would have a detailed breakdown of the project and the skills I used in that project.
+After brainstorming a website design, it was time for a prototype.
+I scoured around and chose Figma as my interface design tool.
+
+## Draft Interface:
+```Image
+../media/images/projects/portfolio/figma-home-page.png
+Medium
+```
+```Image
+../media/images/projects/portfolio/figma-project-page.png
+Medium
+```
+The two images above are the draft interfaces of my home and project page made with Figma.
+Figma was relatively easy to use and allowed me to create a draft interface.
+My initial interface was bland, but it gave me a good idea of the basic structure of my website.
+I knew Figma had more advanced tools and capabilities, but a web page structure outline was all I needed.
+I designed a simple toolbar to contain links to things like LinkedIn, GitHub, Gmail, etc.
+All current and future pages in my portfolio will use the same toolbar and footer.
+The project box would have interactive left and right buttons to allow users to rotate through each project.
+The project panels will be flip cards, where the front contains a project image and title while the back holds a project summary and link.
+For the project page, the only interactive part will be the table of contents.
+Each chapter in the table would direct the user to that section of text.
+
+# User Interface Implementation:
+After coming up with an interface, it was time to build and implement the interface.
+I split the implementation roadmap into three main sections: navigation bar, project box, and project TOF.
+The features in each milestone were disjoint from each other, so I decided to implement the interface top-down.
+
+## Navigation Bar:
+The navigation bar initially only had two features: a home button and a block of external links.
+Creating a home button was trivial and could be accomplished with a button tag and the following code:
+```Code
+function returnHome() {
+    const homeTitleRef = document.getElementById('title-border');
+
+    homeTitleRef.addEventListener('click', function() {
+        window.location = './index.html';
+    });
+}
+```
+
+Basic links were simple to make with anchor tags and destinations.
+The only custom link was the Gmail button.
+Instead of redirecting to Gmail, I made the button copy my Gmail to the user's clipboard.
+```Code
+function copyGmail() {
+    const gmailLinkRef = document.getElementById('gmail-icon-link');
+
+    gmailLinkRef.addEventListener('click', function() {
+        navigator.clipboard.writeText("darrenyu2003@gmail.com");
+        alert("Gmail Copied to Clipboard");
+    });
+}
+```
+
+After implementing the navigation bar, I decided to add two additional features.
+The first new feature was a banner that shifted left and right in the toolbar.
+The second new feature was an announcement display on the toolbar.
+The banner was easily implemented with position manipulation.
+The announcement display was a little more complex, and required CSS key-frames and animation durations.
+The announcement feature was created with the following code:
+```Code
+function messageDisplay(msgs) {
+    let messageDisplayRef = document.getElementById('message-display');
+    let n = msgs.length, fstMsgLen = n > 0 ? msgs[0].length : 0, fstMsgDone = false;
+
+    for (let i = 0; i < n; i++) {
+        let msg = msgs[i], msgLen = msg.length, s = 0, newBox = null;
+
+        // Create a box for every character and create a blink animation.
+        for (let j = 0; j < msgLen; j++) {
+            newBox = document.createElement('div')
+            if (messageDisplayRef.children.length > fstMsgLen) fstMsgDone = true;
+            if (fstMsgDone) newBox.style.display = "none";
+            newBox.setAttribute('class', 'box-blink');
+            newBox.style.animation = msgs[i][j] != '\0' ? "blink-show 1s 1 forwards" : "blink-hover 1s 3 forwards";
+            if (msgs[i][j] == '\0' && i == n - 1) newBox.style.animation = "blink-hover 1s infinite forwards";
+            newBox.style.animationDelay = s + "s";
+            s += 0.05;
+
+            let newChar = document.createElement('span');
+            newChar.setAttribute('class', 'box-char');
+            newChar.textContent = msgs[i][j];
+            newBox.appendChild(newChar);
+            messageDisplayRef.appendChild(newBox);
+        }
+
+        // Remove the old message and display the next message after the hover animation.
+        if (i < n - 1) {
+            newBox.addEventListener('animationend', function() {
+                for (let k = 0; k < msgLen; k++) messageDisplayRef.removeChild(messageDisplayRef.children[1]);
+                let nextMsgLen = i + 1 < n ? msgs[i + 1].length + 1 : messageDisplayRef.children.length;
+                for (let k = 0; k < nextMsgLen; k++) messageDisplayRef.children[k].style.display = "flex";
+            });
+        }
+    }
+}
+```
+
+## Project Box:
+After the page loads, the project display box should be populated with the first few projects.
+We could access the information of each project through a JSON file.
+The elements of the JSON file would contain the project title, project number, difficulty, image source, abstract, etc.
+I populated the project panels with the following function:
+```Code
+function populateProjects(projects, projectNums) {
+    const projectNumberRef = document.getElementsByClassName('project-number');
+    const projectImagesRef = document.getElementsByClassName('project-image');
+    const projectStarRatingRef = document.getElementsByClassName('star-difficulty-container');
+    const projectTitlesRef = document.getElementsByClassName('project-title');
+    const projectTextsRef = document.getElementsByClassName('project-text');
+
+    // Take properties from the database entry and populate them on the project divs.
+    for (let i = 0; i < 3; i++) {
+        let starCnt = projects[projectNums[i]].stars;
+        projectStarRatingRef[i].innerHTML = "Difficulty:&nbsp";
+        for (let j = 0; j < 5; j++) {
+            let stars = new Image();
+            stars.src = '../media/images/misc/star-on.png';
+
+            if (j == Math.floor(starCnt) && Math.ceil(starCnt) > starCnt) stars.src = '../media/images/misc/star-half.png';
+            else if (j >= Math.floor(starCnt)) stars.src = '../media/images/misc/star-off.png';
+
+            stars.style.width = "25px";
+            projectStarRatingRef[i].appendChild(stars);
+        }
+
+        projectNumberRef[i].textContent = projects[projectNums[i]].number;
+        projectImagesRef[i].src = projects[projectNums[i]].image;
+        projectTitlesRef[i].textContent = projects[projectNums[i]].title;
+        projectTextsRef[i].innerHTML = projects[projectNums[i]].abstract;
+    }
+}
+```
+
+The first interactive feature in the project box was the left and right buttons.
+I decided to store project indices in an array and constantly update these indexes with every button shift.
+Since the projects needed to be updated as well, I would need to do a project repopulation call for the new project indices.
+The right button was implemented similarly to how the left button:
+```Code
+...
+    // On left button press, shift projects to the left.
+    leftButtonRef.addEventListener('click', function() {
+        for (let i = 0; i < 3; i++) {
+            // Play a cloud animation and move project indices by -1.
+            curtainsRef[i].animate([ {visibility: "visible"}, {backgroundColor: "rgb(200, 200, 200)", offset: 0} ], { duration: 1500, iterations: 1 });
+            projectNums[i] = projectNums[i] - 1 != -1 ? projectNums[i] - 1 : projects.length - 1;
+        }
+
+        // Play a button sound and repopulate the project divs.
+        buttonSound.play();
+        buttonSound.currentTime = 0;
+        populateProjects(projects, projectNums);
+    });
+...
+```
+
+The second interactive feature was the project flip card with a shadow animation.
+I would make a linear gradient to imitate a light source to the left so a shadow could be present on the right of a project card flip.
+I wanted the projection to be similar to a real shadow, so I spent a lot of time getting the timing between the project panel and shadow correctly.
+I simulated a flip card shadow with the following function and a helper function:
+```Code
+function projectShadows() {
+    /*
+     * leftProjectShift = n[0]; The size of the shadow from the left project.
+     * leftShadowInc = n[1]; The increase shadow object from the left project.
+     * leftShadowDec = n[2]; The decrease shadow object from the left project.
+     * middleProjectShift = n[3]; The size of the shadow from the middle project.
+     * middleShadowInc = n[4]; The increase shadow object from the middle project.
+     * middleShadowDec = n[5]; The decrease shadow object from the middle project.
+     * rightProjectShift = n[6]; The size of the shadow from the right project.
+     * rightShadowInc = n[7]; The increase shadow object from the right project.
+     * rightShadowDec = n[8]; The decrease shadow object from the right project.
+     */
+    let n = [250, null, null, 250, null, null, 250, null, null];
+    const projectRefs = document.getElementsByClassName('project-box')
+    const boxRefs = [projectRefs[0], projectRefs[1], projectRefs[2]];
+
+    // Cast shadows on projects that are hovered.
+    for (let i = 0; i < 3; i++) {
+        boxRefs[i].addEventListener('mouseenter', function() {
+            // Stop increasing and begin to decrease.
+            clearInterval(n[3 * i + 1]);
+            n[3 * i + 2] = setInterval(shadowShift, 3, n, 3 * i, true);
+        });
+
+        boxRefs[i].addEventListener('mouseleave', function() {
+            // Stop decreasing and begin to increase.
+            clearInterval(n[3 * i + 2]);
+            n[3 * i + 1] = setInterval(shadowShift, 15, n, 3 * i, false);
+        });
+    }
+}
+```
+```Code
+function shadowShift(n, idx, isDec) {
+    const shadowRefs = document.getElementsByClassName('project-shadow');
+
+    // Shifts the shadow and stops under/over flow.
+    if (isDec) {
+        if (n[idx] < 100) return;
+        shadowRefs[idx / 3].style.width = n[idx]-- + "px";
+    } else {
+        if (n[idx] > 250) return;
+        shadowRefs[idx / 3].style.width = n[idx]++ + "px";
+    }
+}
+```
+
+## Project TOC:
+Implementing this section of the portfolio interface was the most difficult part.
+To populate the project page with the correct project information, I would have to make a parser to gather important content from a breakdown text file.
+The parser would need to know the difference between chapter titles, image sources, code snippets, link sources, and paragraph text.
+To accomplish this, I would have to format a text file so my parser could divide the text content into the correct segments.
+Chapters and sub-chapter titles would contain one or two preface hashtags.
+Code snippets, image sources, and link sources would be considered media, which could be easily segmented using grave accents.
+Any text without these special characters would be paragraph text.
+After creating this format style, it was time to make the parser.
+The parser is easily over 100 lines of code, so the following is only a tiny section of the parser code:
+```Code
+...
+    // Valid media tags are links, images, and code snippets.
+    if (mediaType.localeCompare("Link\r") == 0) {
+        let newLink = document.createElement('a'), line = (projectText[idx + n++]).split(" ");
+        newLink.textContent = line.pop();
+        newLink.href = projectText[idx + n++];
+        newLink.target = "_blank";
+        newLink.setAttribute('class', 'link-display-link');
+
+        newSnip.textContent = line.join(" ") + " ";
+        newSnip.appendChild(newLink);
+        newSnip.setAttribute('class', 'link-display-text');
+    } else if (mediaType.localeCompare("Image\r") == 0) {
+        let newImage = new Image(), sizeChart = {"Small\r": "20%", "Medium\r": "50%", "Large\r": "70%"}
+        newImage.src = projectText[idx + n++];
+
+        // Look for size statement or default a size.
+        if (sizeChart.hasOwnProperty(projectText[idx + n])) newImage.style.width = sizeChart[projectText[idx + n]];
+        else newImage.style.width = sizeChart["Medium\r"];
+        newSnip.appendChild(newImage);
+        newSnip.setAttribute('class', 'center-image');
+    } else if (mediaType.localeCompare("Code\r") == 0) {
+        newSnip.setAttribute('class', 'code-snippet');
+
+        while (projectText[idx + n].charCodeAt(0) != 96) {
+            let newLine = document.createElement('div');
+    
+            // Add tab characters to code snippets.
+            for (let t = 0; projectText[idx + n].charCodeAt(t) == 32; t++) newLine.innerHTML += '&nbsp;';
+            newLine.textContent += projectText[idx + n++];
+            newSnip.appendChild(newLine);
+        }
+    }
+...
+```
+```Code
+...
+    // Set up the TOF with jumps to each chapter.
+    for (let i = 0; i < chapters.length; i++) {
+        let newChapter = document.createElement('div'), chapterLink = document.createElement('a');
+
+        if (chapters[i][0] == 'c') {
+            newChapter.textContent = "• ";
+            chapterLink.textContent = chapters[i][1];
+            newChapter.setAttribute('class', 'tof-chapter');
+            chapterLink.setAttribute('class', 'tof-chapter-link');
+        } else {
+            newChapter.textContent = "- ";
+            chapterLink.textContent = chapters[i][1];
+            newChapter.setAttribute('class', 'tof-sub-chapter');
+            chapterLink.setAttribute('class', 'tof-sub-chapter-link');
+        }
+
+        chapterLink.addEventListener('click', function() {
+            window.scrollTo(0, chapters[i][2].offsetTop - document.getElementById('tool-bar').offsetHeight);
+        });
+        newChapter.appendChild(chapterLink);
+        projectTableOfContentsRef.appendChild(newChapter);
+    }
+...
+```
+
+# Final Thoughts:
+Overall, I'm glad I got the opportunity to make my portfolio.
+I enjoyed designing and implementing a user interface.
+My JavaScript/HTML5/CSS3 skills have significantly improved after creating this portfolio.
+I got the chance to learn new HTML5 tags and CSS features and be more intimate with the capabilities of JavaScript.
+While I'm very proud and pleased with what I created, I think there can be significant improvements to my website portfolio.
+After implementing the interface, the first feature I wanted to add was a search bar for my projects.
+Another feature I might want to add is a button to switch the project box from window view to list view.
+Presenting only three projects at a time is limiting if I have more projects to show.
+I plan to add these features and many more improvements in the future when I have time.
+I also plan to make my portfolio website mobile responsive.

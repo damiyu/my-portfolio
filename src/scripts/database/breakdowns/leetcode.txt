@@ -1,0 +1,502 @@
+Breakdown Last Updated: Dec 7, 2023
+```Link
+Link to project repository: Repository
+https://github.com/damiyu/leetcode-profile
+```
+
+# Purpose:
+The idea of developing a LeetCode profile website was mainly to improve my JavaScript capabilities.
+At this point, I had some practice using JavaScript in web applications.
+Now would be a great time to hone my skills in developing server-side tools.
+I wanted to practice reading and storing into a JSON file using JavaScript on the server side of things.
+I also wanted to practice my sorting skills on data sets.
+To practice these skills, I would need a set of information I would regularly update.
+Since I regularly solved LeetCode problems, I decided to create a data set containing information about LeetCode problems.
+
+# Project Plan
+After identifying the minimum requirements, it was time to map out my plan of development.
+Since website content depends on my database of LeetCode problems, I would have to start back-end development first.
+Once I have all the tools and formatting done on the server side, I can then begin client-side development.
+
+# Server Side Development:
+Before building a database, I would have to decide the best format of the database that would fit this scenario.
+Unfortunately, I'm unfamiliar with SQL and other types of databases, so I chose to stick with what I knew, document-style databases.
+I opted to designate a single JSON file as my database for readability and because of the simplistic nature of the data.
+To retrieve from and edit the database, I would use Node.js to run JavaScript with command line arguments.
+
+## JSON Structure:
+I wanted to keep the JSON file simple, so each object would contain the problem number, difficulty, date of submission, programming language used, algorithm run time percentile, algorithm memory usage percentile, and if I received external help.
+To avoid data type confusion, all the above properties are stored as strings.
+The following is an example of an element in my database:
+```Code
+...
+    {
+		"number": "0",
+		"difficulty": "Easy",
+		"date": "Jan 1, 2000",
+		"language": "Java",
+		"runtime": "100.00",
+		"memory": "100.00",
+		"help": "No"
+    },
+...
+```
+
+## Node.js:
+As I mentioned before, new entries are logged into the database using command line arguments and Node.js.
+Some crucial tools to create are safety guards to check if the arguments are valid.
+If we get a valid add command with the correct arguments, we then must check if the entry isn't a repeat.
+Because the elements in the database are sorted in ascending order based on their problem number, I wrote a simple binary search function to check the new entry problem number.
+The following is the search function and a section of the argument validation function:
+```Code
+function searchNumber(fs, filePath, number) {
+    let jsonFile = JSON.parse(fs.readFileSync(filePath));
+    let len = jsonFile.length, top = 0, mid = len >> 1;
+
+    while (top < mid) {
+        if (parseInt(jsonFile[mid].number) < parseInt(number)) {
+            top = mid;
+            mid = (mid + len) >> 1;
+        } else if (parseInt(jsonFile[mid].number) > parseInt(number)) {
+            mid = (mid + top) >> 1;
+        } else {
+            return true;
+        }
+    }
+
+    return parseInt(jsonFile[mid].number) == parseInt(number);
+}
+```
+```Code
+function entryChecker(number, difficulty, language, date, runtime, memory, help) {
+    // Check if new entry is a valid problem number in the format X*, X[0] != '0'.
+    if (!/^[1-9]\d*/.test(number)) {
+        console.log("Fail, \'" + number + "\' is an invalid number argument on new entry!");
+        return false;
+    }
+    
+    ...
+    
+    // Check if new entry has a correct date format.
+    const validMon = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    let dateSplit = date.split(' ');
+    if (dateSplit.length != 3 || validMon.indexOf(dateSplit[0]) == -1 || parseInt(dateSplit[1]) < 1
+        || parseInt(dateSplit[1]) > 31 || dateSplit[1][dateSplit[1].length - 1] != ',') {
+        console.log("Fail, \'" + date + "\' is an invalid date argument on new entry!");
+        return false;
+    }
+
+    // Check of new entry has a runtime in the format XX.XX or XXX.XX, X[0] != '0'.
+    if (!/^[1-9]\d{0,2}\.\d{2}$/.test(runtime)) {
+        console.log("Fail, " + runtime + "\' is an invalid runtime argument on new entry!");
+        console.log("Runtime must follow the format XX.XX or XXX.XX! X[0] != \'0\'");
+        return false;
+    }
+
+    ...
+
+    return true;
+}
+```
+
+Once an entry has passed validation, we can finally add this new entry to the database.
+New entries are inserted at the end of the database, and then we have to relocate this entry to maintain the ordering of the database.
+First, I need to perform a binary search on the database to see where the new entry should go.
+Second, we compare the problem numbers between the new entry and the expected location.
+Third, we move the new entry to the correct location and shift all other entries.
+The following is the ordering algorithm and its helper functions:
+```Code
+function orderEntries(fs, filePath) {
+    let jsonFile = JSON.parse(fs.readFileSync(filePath));
+    let len = jsonFile.length;
+
+    for (let i = 0; i < len - 1; i++) {
+        if (parseInt(jsonFile[i + 1].number) < parseInt(jsonFile[i].number)) {
+            let idx = idxFind(jsonFile, i + 1), old;
+
+            // If the current number is bigger than the found idx, replace the next idx with the current number
+            // and shift problems to the right. If the current number is smaller, only shift objects to the right.
+            if (parseInt(jsonFile[idx].number) < parseInt(jsonFile[i + 1].number)) {
+                old = jsonFile[idx + 1];
+                jsonFile[idx + 1] = jsonFile[i + 1];
+
+                for (let j = idx + 2; j <= i + 1; j++) {
+                    let temp = jsonFile[j];
+                    jsonFile[j] = old;
+                    old = temp;
+                }
+            } else {
+                old = jsonFile[idx];
+                jsonFile[idx] = jsonFile[i + 1];
+
+                for (let j = idx + 1; j <= i + 1; j++) {
+                    let temp = jsonFile[j];
+                    jsonFile[j] = old;
+                    old = temp;
+                }
+            }
+        }
+    }
+
+    if (isAscending(jsonFile)) {
+        console.log("Sort complete!");
+        fs.writeFileSync(filePath, JSON.stringify(jsonFile, null, '\t'));
+    } else {
+        console.log("Sort failed and new object discarded, please check 'function orderEntries()'!!!");
+    }
+}
+```
+```Code
+function idxFind(jsonFile, curIdx) {
+    let len = curIdx, top = 0, mid = len >> 1;
+
+    while (top < mid) {
+        if (parseInt(jsonFile[mid].number) < parseInt(jsonFile[curIdx].number)) {
+            top = mid;
+            mid = (mid + len) >> 1;
+        } else {
+            mid = (mid + top) >> 1;
+        }
+    }
+
+    return mid;
+}
+```
+```Code
+function isAscending(jsonFile) {
+    let len = jsonFile.length;
+
+    for (let i = 0; i < len - 1; i++) {
+        if (parseInt(jsonFile[i + 1].number) <= parseInt(jsonFile[i].number)) {
+            console.log("Not order (num: " + jsonFile[i].number + "), at " + "idx: " + i + " and idx: " + (i + 1));
+            return false;
+        }
+    }
+
+    console.log("In order");
+    return true;
+}
+```
+
+# Client Side Development:
+After developing the required server-side tools and database, I could finally create the website.
+To brainstorm some interface designs, I would be using Figma as my design tool.
+I planned to build a simple website with two pages: a home page and a problem page.
+The home page would display some overall statistics about my profile and then show a preview of each problem in the database.
+The problem page would be the expanded version of the problem the user selects.
+Because the problem page depends on user input, I would also need to catch when a user goes to the problem page before selecting a problem.
+Both pages would also have toolbars to search problems directly.
+
+## Figma Designs:
+```Image
+../media/images/projects/leetcode/figma-home-page.png
+Medium
+```
+```Image
+../media/images/projects/leetcode/figma-problem-page.png
+Medium
+```
+These sketches serve as basic website outlines.
+The toolbar should have links to things like Gmail, LinkedIn, etc.
+A search bar is also necessary to search specific problem numbers.
+The beginning content of the home page should show my overall LeetCode problem statistics.
+In that section, we should show how many problems I solved, a pie chart of the difficulty split, and the most recently viewed problem by the user.
+Under the statistics, I would have an interactive page to flip between problems.
+There would be a filter setting to filter the problems based on their difficulty, programming language, quality, and independence.
+The problem page will display the preview, image, and code of the user-selected problem.
+
+# Interface Implementation:
+Once I have created my website interface, it is time to implement the features of this interface.
+The home page would need the implementation of the statistic display and content board.
+The problem page only needs the problem display feature.
+Both pages require the toolbar.
+Since the other website features depend on the content of the problem board, I decided to implement this interface in the following order: content board, navigation bar, statistic display, and problem display.
+
+## Content Board:
+First, I would have to pull information from the database.
+Once I have all the information about each problem, I need to display the problems based on the filter settings and the page number.
+Because the page number and filtered data subset are required, I began to implement the filter section of the content table.
+When a user clicks the filter button, each filter selector value is taken and used to create the desired subset of problems.
+After a subset is made, we populate the board with the first 15 filtered problems.
+The following are some code snippets of how the filter works:
+```Code
+function filterSearch(problems, filter, searchProblem, pageNum) {
+    ...
+
+    filterButtonRef.addEventListener('click', function() {
+        applyAudio.currentTime = 0;
+        applyAudio.play();
+
+        filter[0] = difficultyFilterRef.value;
+        filter[1] = languageFilterRef.value;
+        filter[2] = percentileFilterRef.value
+        filter[3] = solutionFilterRef.value;
+
+        let appliedFilter = filterProblems(problems, filter);
+        pageNum[0] = 1;
+        ...
+    });
+}
+```
+```Code
+function filterProblems(problems, filter) {
+    let appliedFilter = [], sortIdx = 0, len = problems.length;
+
+    for (let i = 0; i < len; i++) {
+        if (filter[0] != "All" && problems[i].difficulty != filter[0]) continue;
+        if (filter[1] != "All" && problems[i].language != filter[1]) continue;
+        if (filter[2] != "All") {
+            let percentile = parseFloat(problems[i].runtime) + parseFloat(problems[i].memory);
+
+            if (filter[2] == "Good" && percentile < 180) continue;
+            else if (filter[2] == "Neutral" && (percentile <= 100 || percentile >= 180)) continue;
+            else if (filter[2] == "Bad" && percentile >= 100) continue;
+        }
+        if (filter[3] != "All" && problems[i].help != filter[3]) continue;
+
+        appliedFilter[sortIdx++] = problems[i];
+    }
+
+    return appliedFilter;
+}
+```
+
+Next, I began the creation of the left and right buttons.
+I simply made the left and right buttons increment or decrement the global page number value.
+The page value will serve as an index to my 15-wide sliding window of the filtered subset.
+Once the buttons and filters were done, I could finally populate and decorate the content board.
+To populate the board, I called all the div classes and changed their text content to their associated problem properties.
+After the problems were filled out, I styled the words and number of each problem based on their values.
+```Code
+function problemPopulate(problems, appliedFilter, searchProblem, pageNum) {
+    ...
+
+    // First problem card is the previously searched problem or the default problem.
+    if (searchIdx != -1) {
+        problemNumber[0].textContent = problems[searchIdx].number;
+        problemType[0].textContent = problems[searchIdx].difficulty;
+        problemDate[0].textContent = problems[searchIdx].date;
+        problemLang[0].textContent = problems[searchIdx].language;
+        problemTime[0].textContent = problems[searchIdx].runtime;
+        problemMem[0].textContent = problems[searchIdx].memory;
+        problemHelp[0].textContent = problems[searchIdx].help;
+    } else {
+        problemNumber[0].textContent = "N/A";
+        problemType[0].textContent = "N/A";
+        problemDate[0].textContent = "MMM DD, YYYY";
+        problemLang[0].textContent = "N/A";
+        problemTime[0].textContent = "0.00";
+        problemMem[0].textContent = "0.00";
+        problemHelp[0].textContent = "N/A";
+    }
+
+    ...
+
+    // Skip the first problem card because of the search card.
+    for (let i = 1; i < 16 && problemIdx < problemCnt; i++) {
+        problemDivs[i].style.visibility = "visible";
+        problemNumber[i].textContent = appliedFilter[problemIdx].number;
+        problemType[i].textContent = appliedFilter[problemIdx].difficulty;
+        problemDate[i].textContent = appliedFilter[problemIdx].date;
+        problemLang[i].textContent = appliedFilter[problemIdx].language;
+        problemTime[i].textContent = appliedFilter[problemIdx].runtime;
+        problemMem[i].textContent = appliedFilter[problemIdx].memory;
+        problemHelp[i].textContent = appliedFilter[problemIdx++].help;
+    }
+}
+```
+```Code
+function gradeProblems() {
+    ...
+
+    // One extra problem cnt to include the main problem from search.
+    for (let i = 0; i < 16; i++) {
+        if (typeRef[i].textContent == "Easy") {
+            typeRef[i].style.color = "lime";
+            typeRef[i].style.backgroundImage = "radial-gradient(black 30%, lime)";            
+        } else if (typeRef[i].textContent == "Medium") {
+            typeRef[i].style.color = "gold";
+            typeRef[i].style.backgroundImage = "radial-gradient(black 30%, gold)";
+        } else if (typeRef[i].textContent == "Hard") {
+            typeRef[i].style.color = "crimson";
+            typeRef[i].style.backgroundImage = "radial-gradient(black 30%, crimson)";
+        }
+
+        ...
+    }
+}
+```
+
+## Toolbar:
+Like most websites, my toolbar would be implemented in every webpage.
+The only interactive sections of the toolbar are the links and problem search bar.
+The links were easy to create, but the search bar brought a design flaw.
+On the home page, I created a unique problem that displays the most recently viewed problem.
+When a user searches for a valid problem, the unique problem would be repopulated as the desired value.
+Unfortunately, the displayed problem on the problem page depended on the same value in local storage.
+To avoid rewriting my design, I decided to implement two different search bars.
+The one on the home page wouldn't change, but the search bar on the problem page would store the searched problem in local storage and refresh the page for reprocessing.
+Below is how I implemented the two different search bars:
+```Code
+function searchCall(problems, searchProblem, pageNum) {
+    ...
+
+    searchRef.addEventListener('click', function() {
+        ...
+
+        // If problem exists, set the search card to that problem idx.
+        if (Util.problemSearch(problems, problemNum) != -1) {
+            // Store the idx so we know which problem to display.
+            localStorage.setItem('problem-num', problemNum);
+            searchProblem[0] = problemNum;
+            problemPopulate(problems, problems, searchProblem, pageNum);
+            gradeProblems();
+
+            // Bring the user to the top of the page to view the problem.
+            document.documentElement.scrollTop = 0;
+
+            document.getElementsByClassName('problem-div')[0].setAttribute('id', 'problem-div-search');
+        } else {
+            alert("Sorry, but your requested search isn't in the database/incomplete. Try searching for another problem number.");
+        }
+    });
+
+    ...
+}
+```
+```Code
+function searchCall(problems) {
+    ...
+
+    searchRef.addEventListener('click', function() {
+        ...
+
+        // If problem exists, set the search card to that problem idx.
+        if (Util.problemSearch(problems, problemNum) != -1) {
+            localStorage.setItem('problem-num', problemNum);
+            window.location = './problem.html';
+        } else {
+            alert("Sorry, but your requested search isn't in the database/incomplete. Try searching for another problem number.");
+        }
+    });
+
+    ...
+}
+```
+
+## Statistics Display:
+The statistic display was my favorite section because I had the most creative freedom in this section.
+Because I was thinking ahead while implementing the content board, I processed all the raw information of the database, like the number of each difficulty and which programming languages I used, and stored this information in an array.
+I took this information and displayed the necessary sections.
+The following is how I implemented the table and pie chart:
+```Code
+function statsMaker(problems) {
+    ...
+
+    for (let i = 0; i < totalProblemCnt; i++) {
+        if (problems[i].difficulty == "Medium") {
+            problemStatsCnts[0]--;
+            problemStatsCnts[1]++;
+        } else if (problems[i].difficulty == "Hard") {
+            problemStatsCnts[0]--;
+            problemStatsCnts[2]++;
+        }
+
+        // Increment the correct language element.
+        for (let j = 0; j < 5; j++) if (problems[i].language == langList[j]) problemStatsCnts[j + 4]++;
+        averageRun += parseFloat(problems[i].runtime);
+        averageMem += parseFloat(problems[i].memory);
+    }
+    
+    // Inserting the mean runtime and memory usage through the document IDs.
+    meanRunRef.textContent += (averageRun / totalProblemCnt).toFixed(2) + "%";
+    meanMemRef.textContent += (averageMem / totalProblemCnt).toFixed(2) + "%";
+
+    for (let i = 0; i < 9; i++) statsInputRef[i].textContent = problemStatsCnts[i];
+    return problemStatsCnts;
+}
+```
+```Code
+function pieChartSetUp(problemCnts) {
+    const pieRef = document.getElementById('pie-chart');
+    const statsInputRef = document.getElementsByClassName('stats-input');
+    let easySection = (problemCnts[0] / problemCnts[3]) * 100, medSection = (problemCnts[1] / problemCnts[3]) * 100 + easySection;
+    let n = problemCnts.length;
+
+    easySection = easySection.toFixed(0);
+    medSection = medSection.toFixed(0);
+
+    // Calculate and insert the percentages of each type into the stat block.
+    statsInputRef[0].textContent += " (" + easySection + "%)";
+    statsInputRef[1].textContent += " (" + (medSection - easySection) + "%)";
+    statsInputRef[2].textContent += " (" + (100 - medSection) + "%)";
+    for (let i = 4; i < n; i++) statsInputRef[i].textContent += " (" + (problemCnts[i] / problemCnts[3] * 100).toFixed(0) + "%)";
+
+    pieRef.style.backgroundImage = "conic-gradient(lime 0% " + easySection + "%, yellow " + easySection +
+                                                        "% " + medSection + "%, crimson " + medSection + "% 100%)";
+}
+```
+
+## Solution Display:
+Finally, the last section was to display the correct problem on the problem page.
+To do this, I would depend on the problem index in local storage.
+In cases of missing or invalid indices, a prompt would display a request for a new search.
+Once we had a valid problem, we searched for the corresponding code file and problem image.
+For consistency, all image and file names followed a standard of naming.
+For the retrieved problem number, I can take the necessary properties and construct the correct file paths.
+```Code
+function displayImage(problem) {
+    const problemImageRef = document.getElementById('problem-image');
+    let problemDiff = problem.difficulty;
+
+    if (problemDiff == "Easy") problemDiff = "easy";
+    else if (problemDiff == "Medium") problemDiff = "med";
+    else if (problemDiff == "Hard") problemDiff = "hard";
+    
+    let path = "../media/images/" + problemDiff + "/" + problemDiff + problem.number + ".png", checkImg = new Image();
+    checkImg.onerror = function() {problemImageRef.src = "../media/images/misc/blank.png";}
+    checkImg.onload = function() {problemImageRef.src = path;}
+    checkImg.src = path;
+}
+```
+```Code
+async function fileTextDisplay(problem) {
+    ...
+    let fileText = await fetch('../../algorithms/' + diff + '/' + diff + problem.number + '/Solution.' + lang);
+
+    // Some problems will have a different file name.
+    if (problem.number == 225) fileText = await fetch('../../algorithms/' + diff + '/' + diff + problem.number + '/MyStack.java');
+    if (problem.number == 706) fileText = await fetch('../../algorithms/' + diff + '/' + diff + problem.number + '/MyHashMap.py');
+
+    // Segement the text by line breaks.
+    let lines = (await fileText.text()).split('\n');
+    let linesLen = lines.length;
+
+    // Traverse the text lines and insert their content into a new paragraph.
+    for (let i = 0; i < linesLen; i++) {
+        const newLine = document.createElement('p');
+
+        // Ignore all new lines in the file.
+        if (lines[i] != "\r") {
+            newLine.setAttribute('class', 'code-line');
+
+            // Add tabs when tabs are detected.
+            for (let t = 0; lines[i].charCodeAt(t) == 32; t++) newLine.innerHTML += '&nbsp';
+            newLine.textContent += lines[i];
+            codeBoxRef.appendChild(newLine);
+        }
+    }
+
+    ...
+}
+```
+
+# Final Thoughts:
+Like all my website-related projects, I got to improve my JavaScript/HTML5/CSS3 skillsets.
+This project would lean towards the simpler side of projects, but I enjoyed creating this website.
+The use of a JSON file as a database was a naive implementation of a database, but it served as a practice for retrieving and storing information.
+Another thing I learned while building this project was the importance of proper planning.
+I would not have had problems with the search bar if I had done a deeper analysis of dependencies.
+Luckily, everything panned out, and the different search bars weren't too complicated to implement.
+I have plans to make the website mobile responsive and incorporate React.js components to improve visuals.
+I also want to update the toolbar to have more useful tools.

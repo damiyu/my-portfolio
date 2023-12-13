@@ -2,33 +2,50 @@
     {
         "title": "Portfolio Website",
         "image": "../media/images/projects/portfolio/portfolio.png",
-        "abstract": "My portfolio website displays my projects and talks about me and my technical skills. Each project on display has a brief project summary with a link to a detailed breakdown. My portfolio website is designed and developed from scratch. The organization and animations of my portfolio show my ability to structure and style an HTML file with CSS. I use JavaScript to manipulate the HTML and make the website interactive.",
-        "link": "./project.html",
-        "skill": ["JavaScript", "Manipulate HTML elements and shadow DOM parts of a page.", "HTML5", "Make the framework of the webpages.", "CSS3", "Modify the apperance of the webpages and apply animations."],
-        "text": "../scripts/database/portfolio.txt"
+        "abstract": "My portfolio website is used to display my projects. Each project on display has a brief project summary with a link to a detailed breakdown. My portfolio was designed and developed from scratch. The organization and animations of my portfolio show my ability to structure and style an HTML file with CSS. I use JavaScript to manipulate the HTML and make the website interactive.",
+        "skill": {"JavaScript": "I used JavaScript mainly to create/modify HTML elements and generate/execute animations. I also used JS to shadow DOM sections of my page.",
+                  "HTML5": "HTML was used to structure my website and hold my content.",
+                  "CSS3": "CSS was used to style elements in the HTML file and run CSS animations."},
+        "text": "../scripts/database/breakdowns/portfolio.txt",
+        "number": 1,
+        "stars": 3
     },
     {
-        "title": "LeetCode Webpage",
+        "title": "My LC Website",
         "image": "../media/images/projects/leetcode/leetcode.png",
-        "abstract": "Example 123, Hello world!",
-        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
-    },
-    {
-        "title": "Java JPanel Editor",
-        "image": "../media/images/about-me/java-icon.png",
-        "abstract": "Example 123, Hello world!",
-        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
-    },
-    {
-        "title": "Chess Bot in C",
-        "image": "../media/images/about-me/c-icon.png",
-        "abstract": "Example 123, Hello world!",
-        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+        "abstract": "My LeetCode website is where I publish my LeetCode solutions and attempts. I mainly problem-solve using Java or Python3 to maximize my solve times. To further develop my JS, HTML5, and CSS3 skills, I decided to create this website from scratch.",
+        "skill": {"JavaScript": "JavaScript was used to help structure the HTML files of this website. I used Node.js to maintain a JSON database. Elements in this database were used to display content on the website with the help of JavaScript.",
+                  "HTML5": "I used HTML5 to set up the basic page structure and create skeleton elements that awaited content.",
+                  "CSS3": "CSS3 was used to control the color scheme of the website to make the website more vibrant. I also used CSS3 to create some passive background animations for visual purposes."},
+        "text": "../scripts/database/breakdowns/leetcode.txt",
+        "number": 2,
+        "stars": 2
     },
     {
         "title": "Java GPA Calculator",
         "image": "../media/images/about-me/javascript-icon.png",
-        "abstract": "Example 123, Hello world!",
-        "link": "https://damiyu.github.io/leetcode-profile/src/pages/index.html"
+        "abstract": "Currently being developed or breakdown is not finished.",
+        "skill": {},
+        "text": "../scripts/database/breakdowns/zeta.txt",
+        "number": 3,
+        "stars": 2.5
+    },
+    {
+        "title": "Chess Bot in C",
+        "image": "../media/images/about-me/c-icon.png",
+        "abstract": "Currently being developed or breakdown is not finished.",
+        "skill": {},
+        "text": "../scripts/database/breakdowns/zeta.txt",
+        "number": 4,
+        "stars": 4
+    },
+    {
+        "title": "Web Game Mobile",
+        "image": "../media/images/about-me/java-icon.png",
+        "abstract": "Currently being developed or breakdown is not finished.",
+        "skill": {},
+        "text": "../scripts/database/breakdowns/zeta.txt",
+        "number": 5,
+        "stars": 3.5
     }
 ]

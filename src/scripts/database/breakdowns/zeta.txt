@@ -1,0 +1,20 @@
+# Under Development:
+This project is currently being worked on and is not ready for display.
+
+# Be Patient:
+```Code
+#include <stdio.h>
+#include <stdbool.h>
+
+int main(int argc, int *argv[]) {
+    bool isDone = false;
+    int val = 0;
+
+    while (!isDone) {
+        printf("%d: Project is under construction, please be patient.\n", val);
+
+        if (val == 2147483647) val = 0;
+        else val++;
+    }
+}
+```

@@ -13,12 +13,15 @@ async function init() {
      * bounceCnt = n[6]; The number of times the loading bubbles have bounced.
      */
     let n = [-5, -5, -5, false, false, false, 0];
-    setInterval(toolBarStripes, 5, n);
+    setInterval(toolBarStripes, 10, n);
+
+    let projects = await Util.getJSON('../database/projects.json'), selectProject = projects[localStorage.getItem('project-idx')];
+    selectProject = selectProject != null ? selectProject : projects[0];
+    let msgs = ["Loading...\0", selectProject.title + "...\0"];
+    messageDisplay(msgs);
     returnHome();
     copyGmail();
-
-    let projects = await Util.getJSON('../database/projects.json');
-    projectFill(projects);
+    projectFill(selectProject);
 
     // Apply a loading screen so the shadow DOM can completely loaded before viewing.
     loadingScreen(n);
@@ -61,6 +64,42 @@ function toolBarStripes(n) {
     else if (n[3] && n[1] <= 95) n[2] -= 0.1;
 }
 
+function messageDisplay(msgs) {
+    let messageDisplayRef = document.getElementById('message-display');
+    let n = msgs.length, fstMsgLen = n > 0 ? msgs[0].length : 0, fstMsgDone = false;
+
+    for (let i = 0; i < n; i++) {
+        let msg = msgs[i], msgLen = msg.length, s = 0, newBox = null;
+
+        // Create a box for every character and create a blink animation.
+        for (let j = 0; j < msgLen; j++) {
+            newBox = document.createElement('div')
+            if (messageDisplayRef.children.length > fstMsgLen) fstMsgDone = true;
+            if (fstMsgDone) newBox.style.display = "none";
+            newBox.setAttribute('class', 'box-blink');
+            newBox.style.animation = msgs[i][j] != '\0' ? "blink-show 1s 1 forwards" : "blink-hover 1s 3 forwards";
+            if (msgs[i][j] == '\0' && i == n - 1) newBox.style.animation = "blink-hover 1s infinite forwards";
+            newBox.style.animationDelay = s + "s";
+            s += 0.05;
+
+            let newChar = document.createElement('span');
+            newChar.setAttribute('class', 'box-char');
+            newChar.textContent = msgs[i][j];
+            newBox.appendChild(newChar);
+            messageDisplayRef.appendChild(newBox);
+        }
+
+        // Remove the old message and display the next message after the hover animation.
+        if (i < n - 1) {
+            newBox.addEventListener('animationend', function() {
+                for (let k = 0; k < msgLen; k++) messageDisplayRef.removeChild(messageDisplayRef.children[1]);
+                let nextMsgLen = i + 1 < n ? msgs[i + 1].length + 1 : messageDisplayRef.children.length;
+                for (let k = 0; k < nextMsgLen; k++) messageDisplayRef.children[k].style.display = "flex";
+            });
+        }
+    }
+}
+
 function returnHome() {
     const homeTitleRef = document.getElementById('title-border');
 
@@ -78,29 +117,28 @@ function copyGmail() {
     });
 }
 
-async function projectFill(projects) {
+async function projectFill(project) {
     const projectTitleRef = document.getElementById('project-title');
     const projectSkillsRef = document.getElementById('project-skills');
-    const projectSummaryRef = document.getElementById('project-summary-text');
+    const projectTableOfContentsRef = document.getElementById('project-tof');
     const projectTextRef = document.getElementById('project-text');
-    const projectContent = await fetch(projects[0].text);
+    const projectContent = await fetch(project.text);
     const projectText = (await projectContent.text()).split('\n');
-    let n = projectText.length;
+    let n = projectText.length, skills = project.skill;
 
-    projectTitleRef.textContent = projects[0].title;
-
-    let skills = projects[0].skill, s = skills.length;
-    for (let i = 0; i < s; i += 2) {
+    projectTitleRef.textContent = project.title;
+    for (const [k, v] of Object.entries(skills)) {
         let newRow = document.createElement('tr');
         let newItemOne = document.createElement('td'), newItemTwo = document.createElement('td');
 
-        newItemOne.textContent = skills[i];
-        newItemTwo.textContent = skills[i + 1];
+        newItemOne.textContent = k;
+        newItemTwo.textContent = v
         newRow.appendChild(newItemOne);
         newRow.appendChild(newItemTwo);
         projectSkillsRef.appendChild(newRow);
     }
 
+    let chapters = [];
     for (let i = 0; i < n; i++) {
         let newLine = document.createElement('div');
 
@@ -110,23 +148,60 @@ async function projectFill(projects) {
             projectTextRef.appendChild(snip[0]);
             i = snip[1];
         } else {
-            // Creating a new chapter and store the content before appending.
+            // Creating a new chapter and store chapter components for the TOF.
             if (projectText[i].charCodeAt(0) == 35) {
+                let chapterInfo = ['c', "", 0], title = projectText[i++].split(" ");
                 newLine.setAttribute('class', 'chapter-title');
-                let title = projectText[i++].split(" ");
-                title.shift();
+                if (title.shift().length > 1) {
+                    chapterInfo[0] = 's';
+                    newLine.setAttribute('class', 'sub-chapter-title');
+                }
                 newLine.textContent = title.join(" ");
                 projectTextRef.appendChild(newLine);
+
+                chapterInfo[1] = title.join(" ");
+                chapterInfo[2] = newLine;
+                chapters.push(chapterInfo);
                 newLine = document.createElement('div');
             }
 
+            // Traverse the chapter content and stop when media or a new chapter is detected.
             newLine.setAttribute('class', 'chapter-content');
-            while (i + 1 < n && projectText[i + 1].charCodeAt(0) != 96 && projectText[i + 1].charCodeAt(0) != 35) {
-                newLine.textContent += projectText[i++];
+            while (i < n) {
+                if (projectText[i].charCodeAt(0) != 96 && projectText[i].charCodeAt(0) != 35) {
+                    newLine.textContent += projectText[i++];
+                } else {
+                    i--;
+                    break;
+                }
             }
-            newLine.textContent += projectText[i];
+            
+            if (newLine.textContent.length == 0) continue;
             projectTextRef.appendChild(newLine);
         }
+    }
+
+    // Set up the TOF with jumps to each chapter.
+    for (let i = 0; i < chapters.length; i++) {
+        let newChapter = document.createElement('div'), chapterLink = document.createElement('a');
+
+        if (chapters[i][0] == 'c') {
+            newChapter.textContent = "• ";
+            chapterLink.textContent = chapters[i][1];
+            newChapter.setAttribute('class', 'tof-chapter');
+            chapterLink.setAttribute('class', 'tof-chapter-link');
+        } else {
+            newChapter.textContent = "- ";
+            chapterLink.textContent = chapters[i][1];
+            newChapter.setAttribute('class', 'tof-sub-chapter');
+            chapterLink.setAttribute('class', 'tof-sub-chapter-link');
+        }
+
+        chapterLink.addEventListener('click', function() {
+            window.scrollTo(0, chapters[i][2].offsetTop - document.getElementById('tool-bar').offsetHeight);
+        });
+        newChapter.appendChild(chapterLink);
+        projectTableOfContentsRef.appendChild(newChapter);
     }
 }
 
@@ -161,14 +236,14 @@ function mediaBuilder(projectText, idx) {
             let newLine = document.createElement('div');
     
             // Add tab characters to code snippets.
-            for (let t = 0; projectText[idx + n].charCodeAt(t) == 32; t++) newLine.innerHTML += '&nbsp';
+            for (let t = 0; projectText[idx + n].charCodeAt(t) == 32; t++) newLine.innerHTML += '&nbsp;';
             newLine.textContent += projectText[idx + n++];
             newSnip.appendChild(newLine);
         }
     }
 
     // Remove excess media content or ignore invalid media types.
-    while (projectText[idx + n].charCodeAt(0) != 96) n++
+    while (projectText[idx + n].charCodeAt(0) != 96) n++;
     return [newSnip, idx + n];
 }
 

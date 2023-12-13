@@ -25,6 +25,22 @@ footer {
     background-image: linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%) 27% 73%, rgb(0, 0, 0, 0%) 75% 100%);
 }
 
+.box-blink, #box-prompt {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
+    width: 1vw;
+    opacity: 0;
+    background-color: transparent;
+}
+
+.box-char, #box-prompt-char {
+    font: bold 1.2vw "Consolas";
+    color: white;
+}
+
 .project-shadow {
     display: flex;
     align-items: center;
@@ -65,9 +81,9 @@ footer {
 
 .hl-gray {
     border-radius: 10px;
-    font-style: italic;
-    color: plum;
-    background-color: rgb(0, 0, 0, 30%);
+    font-weight: bold;
+    color: navy;
+    background-color: rgb(0, 200, 100, 30%);
 }
 
 .project-box {
@@ -134,8 +150,30 @@ footer {
     border-radius: 100%;
 }
 
+.project-number {
+    width: 25px;
+    margin-bottom: 200px;
+    margin-right: 200px;
+    position: absolute;
+    border: 2px solid darkgreen;
+    border-radius: 100%;
+    font: bold 18px "Lora";
+    color: darkgreen;
+    background-color: gold;
+}
+
 .project-title {
     margin-top: 10px;
+}
+
+.star-difficulty-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    font: bold 18px "Play";
+    color: lightcyan;
 }
 
 .project-text {
@@ -191,7 +229,7 @@ footer {
     align-items: left;
     justify-content: center;
     margin-left: 1vw;
-    width: 10vw;
+    margin-right: 1vw;
     gap: 0.5vh;
 }
 
@@ -199,7 +237,7 @@ footer {
 #linkedin-link {
     height: 1.5vw;
     width: 1.5vw;
-    font-size: 0px;
+    font-size: 0vw;
 }
 
 #github-icon-link,
@@ -220,6 +258,18 @@ footer {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+#message-display {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    width: 50vw;
+}
+
+#box-prompt {
+    opacity: 1;
 }
 
 #introduction {
@@ -244,9 +294,15 @@ footer {
     background-color: bisque;
 }
 
+#about-me:hover, #qualification:hover {
+    cursor: pointer;
+    border-color: lightcyan;
+    background-color: lightcyan;
+}
+
 #about-me-title {
     width: fit-content;
-    font: italic bold 36px "Play";
+    font: bold 36px "Play";
     color: navy;
 }
 
@@ -271,7 +327,7 @@ footer {
     border: 15px solid rgb(0, 0, 0, 0%);
     border-radius: 25px;
 
-    font: italic 500 16px "Lora";
+    font: 500 16px "Lora";
     text-align: center;
     color: navy;
     background-color: rgb(128, 128, 128, 75%);
@@ -300,7 +356,7 @@ footer {
     padding: 20px;
     border: 4px solid purple;
     border-radius: 100px;
-    background-image: linear-gradient(90deg, rgb(255, 255, 255), rgb(0, 0, 0, 25%));
+    background-image: linear-gradient(90deg, rgb(255, 255, 140), rgb(0, 0, 0, 50%));
 }
 
 #project-title-border {
@@ -434,6 +490,15 @@ footer {
     src: url(./fonts/Poiret_One/PoiretOne-Regular.ttf);
 }
 
+@keyframes blink-hover {
+    0% {opacity: 1; background-color: white;}
+}
+
+@keyframes blink-show {
+    0%, 25% {opacity: 0; background-color: white;}
+    25%, 100% {opacity: 1; background-color: transparent;}
+}
+
 @keyframes clock-rotate {
     from {transform: rotate(0deg);}
     to {transform: rotate(359deg);}
@@ -445,7 +510,7 @@ footer {
 }
 
 @keyframes descent {
-    form {transform: translateY(0%);}
+    from {transform: translateY(0%);}
     to {transform: translateY(250%);}
 }
 
@@ -455,21 +520,21 @@ footer {
 }
 
 @keyframes slide1 {
-    form {transform: translateX(0%);}
+    from {transform: translateX(0%);}
     to {transform: translateX(350%);}
 }
 
 @keyframes slide2 {
-    form {transform: translateX(0%);}
+    from {transform: translateX(0%);}
     to {transform: translateX(233.5%);}
 }
 
 @keyframes slide3 {
-    form {transform: translateX(0%);}
+    from {transform: translateX(0%);}
     to {transform: translateX(116.5%);}
 }
 
 @keyframes slide4 {
-    form {transform: translateX(0%);}
+    from {transform: translateX(0%);}
     to {transform: translateX(0%);}
 }

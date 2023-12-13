@@ -12,7 +12,13 @@ async function init() {
      * isRightReverse = n[5]; A boolean to check when it's time to reverse the right stripe.
      */
     let n = [-5, -5, -5, false, false, false];
-    setInterval(toolBarStripes, 5, n);
+    setInterval(toolBarStripes, 10, n);
+
+    let msgs = ["Welcome to my portfolio...\0",
+                "My projects are located under my introduction...\0",
+                "I recommend reading about my portfolio project...\0",
+                "\0"];
+    messageDisplay(msgs);
     returnHome();
     copyGmail();
     emojiDelay();
@@ -22,7 +28,8 @@ async function init() {
     let projects = await Util.getJSON('../database/projects.json');
     let projectNums = [0, 1, 2];
     populateProjects(projects, projectNums);
-    menuShit(projects, projectNums);
+    menuShift(projects, projectNums);
+    projectSelect(projectNums);
 }
 
 function toolBarStripes(n) {
@@ -57,6 +64,42 @@ function toolBarStripes(n) {
     else if (n[3] && n[1] <= 95) n[2] -= 0.1;
 }
 
+function messageDisplay(msgs) {
+    let messageDisplayRef = document.getElementById('message-display');
+    let n = msgs.length, fstMsgLen = n > 0 ? msgs[0].length : 0, fstMsgDone = false;
+
+    for (let i = 0; i < n; i++) {
+        let msg = msgs[i], msgLen = msg.length, s = 0, newBox = null;
+
+        // Create a box for every character and create a blink animation.
+        for (let j = 0; j < msgLen; j++) {
+            newBox = document.createElement('div')
+            if (messageDisplayRef.children.length > fstMsgLen) fstMsgDone = true;
+            if (fstMsgDone) newBox.style.display = "none";
+            newBox.setAttribute('class', 'box-blink');
+            newBox.style.animation = msgs[i][j] != '\0' ? "blink-show 1s 1 forwards" : "blink-hover 1s 3 forwards";
+            if (msgs[i][j] == '\0' && i == n - 1) newBox.style.animation = "blink-hover 1s infinite forwards";
+            newBox.style.animationDelay = s + "s";
+            s += 0.05;
+
+            let newChar = document.createElement('span');
+            newChar.setAttribute('class', 'box-char');
+            newChar.textContent = msgs[i][j];
+            newBox.appendChild(newChar);
+            messageDisplayRef.appendChild(newBox);
+        }
+
+        // Remove the old message and display the next message after the hover animation.
+        if (i < n - 1) {
+            newBox.addEventListener('animationend', function() {
+                for (let k = 0; k < msgLen; k++) messageDisplayRef.removeChild(messageDisplayRef.children[1]);
+                let nextMsgLen = i + 1 < n ? msgs[i + 1].length + 1 : messageDisplayRef.children.length;
+                for (let k = 0; k < nextMsgLen; k++) messageDisplayRef.children[k].style.display = "flex";
+            });
+        }
+    }
+}
+
 function returnHome() {
     const homeTitleRef = document.getElementById('title-border');
 
@@ -75,58 +118,68 @@ function copyGmail() {
 }
 
 function emojiDelay() {
+    const introductionRef = document.getElementById('about-me');
     const emojiRef = document.getElementsByClassName('emoji-animated'), emojis = [];
     let len = emojiRef.length, n = 0, k = 0;
 
-    for (let i = 0; i < len; i++) {
-        // Store emoji for replacement later on.
-        emojis.push(emojiRef[i].textContent);
-
-        // Add animation to each emoji with an increasing amount of delay.
-        emojiRef[i].style.animation = "descent 2s forwards";
-        emojiRef[i].style.animationDelay = n + "s";
-        n += 1.5;
-
-        // Once a emoji has 'descented,' start the sliding animation will with displacement.
-        emojiRef[i].addEventListener('animationend', function() {
-            emojiRef[i].style.top = "23.25vh";
-            emojiRef[i].style.animation = "slide" + (i + 1) + " " + (2 - k) + "s forwards";
-            k += 0.25;
-        });
-    }
-
-    // Start emoji replacement when the final animation is finished.
-    emojiRef[len - 1].addEventListener('animationend', function() {
-        const stillRef = document.getElementsByClassName('emoji-still');
-
-        // Hide old emoji span and show the new emoji span.
-        for (let i = 0; i < len; i++) emojiRef[i].style.visibility = "hidden";
-        for (let i = 0; i < len; i++) {
-            stillRef[i].style.visibility = "visible";
-            stillRef[i].textContent = emojis[len - 1 - i];
+    introductionRef.addEventListener('click', function() {
+        if (n == 0) {
+            for (let i = 0; i < len; i++) {
+                // Store emoji for replacement later on.
+                emojis.push(emojiRef[i].textContent);
+    
+                // Add animation to each emoji with an increasing amount of delay.
+                emojiRef[i].style.animation = "descent 2s forwards";
+                emojiRef[i].style.animationDelay = n + "s";
+                n += 1.5;
+    
+                // Once a emoji has 'descented,' start the sliding animation will with displacement.
+                emojiRef[i].addEventListener('animationend', function() {
+                    emojiRef[i].style.top = "23.25vh";
+                    emojiRef[i].style.animation = "slide" + (i + 1) + " " + (2 - k) + "s forwards";
+                    k += 0.25;
+                });
+            }
+    
+            // Start emoji replacement when the final animation is finished.
+            emojiRef[len - 1].addEventListener('animationend', function() {
+                const stillRef = document.getElementsByClassName('emoji-still');
+    
+                // Hide old emoji span and show the new emoji span.
+                for (let i = 0; i < len; i++) emojiRef[i].style.visibility = "hidden";
+                for (let i = 0; i < len; i++) {
+                    stillRef[i].style.visibility = "visible";
+                    stillRef[i].textContent = emojis[len - 1 - i];
+                }
+            });
         }
     });
 }
 
 function iconLoad() {
+    const skillRef = document.getElementById('qualification');
     const skillContainerRef = document.getElementById('skill-container');
     const iconNames = ["java-icon","python-icon","c-icon","cplusplus-icon","javascript-icon","html-icon","css-icon"];
     let len = iconNames.length, n = 0.5;
 
-    for (let i = 0; i < len; i++) {
-        // Create a new icon and set the following properties.
-        const newIcon = document.createElement('img');
-        newIcon.setAttribute('class', 'icon-load');
-        newIcon.src = "../media/images/about-me/"+ iconNames[i] + ".png";
-        newIcon.style.width = "50px";
-
-        // Set animation delays to create a fade-in illusion.
-        newIcon.style.animationDelay = n++ + "s";
-        newIcon.addEventListener('animationend', function() {
-            newIcon.style.visibility = "visible";
-        });
-        skillContainerRef.appendChild(newIcon);
-    }
+    skillRef.addEventListener('click', function() {
+        if (skillContainerRef.children.length == 2) {
+            for (let i = 0; i < len; i++) {
+                // Create a new icon and set the following properties.
+                const newIcon = document.createElement('img');
+                newIcon.setAttribute('class', 'icon-load');
+                newIcon.src = "../media/images/about-me/"+ iconNames[i] + ".png";
+                newIcon.style.width = "50px";
+        
+                // Set animation delays to create a fade-in illusion.
+                newIcon.style.animationDelay = (n * i) + "s";
+                newIcon.addEventListener('animationend', function() {
+                    newIcon.style.visibility = "visible";
+                });
+                skillContainerRef.appendChild(newIcon);
+            }
+        }
+    });
 }
 
 function projectShadows() {
@@ -175,19 +228,35 @@ function shadowShift(n, idx, isDec) {
 }
 
 function populateProjects(projects, projectNums) {
+    const projectNumberRef = document.getElementsByClassName('project-number');
     const projectImagesRef = document.getElementsByClassName('project-image');
+    const projectStarRatingRef = document.getElementsByClassName('star-difficulty-container');
     const projectTitlesRef = document.getElementsByClassName('project-title');
     const projectTextsRef = document.getElementsByClassName('project-text');
 
     // Take properties from the database entry and populate them on the project divs.
     for (let i = 0; i < 3; i++) {
+        let starCnt = projects[projectNums[i]].stars;
+        projectStarRatingRef[i].innerHTML = "Difficulty:&nbsp";
+        for (let j = 0; j < 5; j++) {
+            let stars = new Image();
+            stars.src = '../media/images/misc/star-on.png';
+
+            if (j == Math.floor(starCnt) && Math.ceil(starCnt) > starCnt) stars.src = '../media/images/misc/star-half.png';
+            else if (j >= Math.floor(starCnt)) stars.src = '../media/images/misc/star-off.png';
+
+            stars.style.width = "25px";
+            projectStarRatingRef[i].appendChild(stars);
+        }
+
+        projectNumberRef[i].textContent = projects[projectNums[i]].number;
         projectImagesRef[i].src = projects[projectNums[i]].image;
         projectTitlesRef[i].textContent = projects[projectNums[i]].title;
         projectTextsRef[i].innerHTML = projects[projectNums[i]].abstract;
     }
 }
 
-function menuShit(projects, projectNums) {
+function menuShift(projects, projectNums) {
     const leftButtonRef = document.getElementById('left-button-border');
     const rightButtonRef = document.getElementById('right-button-border');
     const curtainsRef = document.getElementsByClassName('blank-curtain');
@@ -196,20 +265,6 @@ function menuShit(projects, projectNums) {
 
     // On left button press, shift projects to the left.
     leftButtonRef.addEventListener('click', function() {
-        for (let i = 0; i < 3; i++) {
-            // Play a cloud animation and move project indices by 1.
-            curtainsRef[i].animate([ {visibility: "visible"}, {backgroundColor: "rgb(200, 200, 200)", offset: 0} ], { duration: 1500, iterations: 1 });
-            projectNums[i] = projectNums[i] + 1 != projects.length ? projectNums[i] + 1 : 0;
-        }
-
-        // Play a button sound and repopulate the project divs.
-        buttonSound.play();
-        buttonSound.currentTime = 0;
-        populateProjects(projects, projectNums);
-    });
-
-    // On right button press, shift projects to the right.
-    rightButtonRef.addEventListener('click', function() {
         for (let i = 0; i < 3; i++) {
             // Play a cloud animation and move project indices by -1.
             curtainsRef[i].animate([ {visibility: "visible"}, {backgroundColor: "rgb(200, 200, 200)", offset: 0} ], { duration: 1500, iterations: 1 });
@@ -221,4 +276,29 @@ function menuShit(projects, projectNums) {
         buttonSound.currentTime = 0;
         populateProjects(projects, projectNums);
     });
+
+    // On right button press, shift projects to the right.
+    rightButtonRef.addEventListener('click', function() {
+        for (let i = 0; i < 3; i++) {
+            // Play a cloud animation and move project indices by 1.
+            curtainsRef[i].animate([ {visibility: "visible"}, {backgroundColor: "rgb(200, 200, 200)", offset: 0} ], { duration: 1500, iterations: 1 });
+            projectNums[i] = projectNums[i] + 1 != projects.length ? projectNums[i] + 1 : 0;
+        }
+
+        // Play a button sound and repopulate the project divs.
+        buttonSound.play();
+        buttonSound.currentTime = 0;
+        populateProjects(projects, projectNums);
+    });
+}
+
+function projectSelect(projectNums) {
+    let projectLinksRef = document.getElementsByClassName('project-link'), n = projectLinksRef.length;
+
+    for (let i = 0; i < n; i++) {
+        projectLinksRef[i].addEventListener('click', function() {
+            console.log(projectNums[i]);
+            localStorage.setItem('project-idx', projectNums[i]);
+        });
+    }
 }

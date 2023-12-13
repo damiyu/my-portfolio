@@ -41,6 +41,22 @@ footer {
     background-image: linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%) 27% 73%, rgb(0, 0, 0, 0%) 75% 100%);
 }
 
+.box-blink, #box-prompt {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
+    width: 1vw;
+    opacity: 0;
+    background-color: transparent;
+}
+
+.box-char, #box-prompt-char {
+    font: bold 1.2vw "Consolas";
+    color: white;
+}
+
 .bubble {
     position: fixed;
     visibility: hidden;
@@ -49,9 +65,30 @@ footer {
     color: bisque;
 }
 
+.tof-chapter {
+    font: bold 20px "Play";
+    color: purple;
+}
+
+.tof-sub-chapter {
+    color: blue;
+    padding-left: 10%;
+}
+
+.tof-chapter-link:hover,
+.tof-sub-chapter-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .chapter-title {
     font: bold 28px "Georama";
     color: purple;
+}
+
+.sub-chapter-title {
+    font: bold 24px "Georama";
+    color: blue;
 }
 
 .chapter-content {
@@ -138,7 +175,7 @@ footer {
     align-items: left;
     justify-content: center;
     margin-left: 1vw;
-    width: 10vw;
+    margin-right: 1vw;
     gap: 0.5vh;
 }
 
@@ -146,7 +183,7 @@ footer {
 #linkedin-link {
     height: 1.5vw;
     width: 1.5vw;
-    font-size: 0px;
+    font-size: 0vw;
 }
 
 #github-icon-link,
@@ -167,6 +204,18 @@ footer {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+}
+
+#message-display {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    width: 50vw;
+}
+
+#box-prompt {
+    opacity: 1;
 }
 
 #loading {
@@ -232,22 +281,30 @@ footer {
     background-color: wheat;
 }
 
-#project-table-of-contents-container {
+#project-tof-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     justify-content: center;
-    height: 350px;
+    height: fit-content;
     width: 350px;
+    padding-bottom: 15px;
     border: 4px solid seagreen;
     border-radius: 25px;
     background-color: wheat;
 }
 
-#project-table-of-contents {
+#project-tof {
     padding: 4px;
     font: 18px "Play";
     text-align: justify;
+}
+
+#project-tof-title {
+    width: 300px;
+    font: bold 28px "Cairo Play";
+    text-align: center;
+    color: navy;
 }
 
 #project-text {
@@ -312,6 +369,15 @@ footer {
 @font-face {
     font-family: "Poiret One";
     src: url(./fonts/Poiret_One/PoiretOne-Regular.ttf);
+}
+
+@keyframes blink-hover {
+    0% {opacity: 1; background-color: white;}
+}
+
+@keyframes blink-show {
+    0%, 25% {opacity: 0; background-color: white;}
+    25%, 100% {opacity: 1; background-color: transparent;}
 }
 
 @keyframes clock-rotate {
