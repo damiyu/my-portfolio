@@ -168,7 +168,7 @@ function iconLoad() {
                 // Create a new icon and set the following properties.
                 const newIcon = document.createElement('img');
                 newIcon.setAttribute('class', 'icon-load');
-                newIcon.src = "../media/images/about-me/"+ iconNames[i] + ".png";
+                newIcon.src = "./media/images/about-me/"+ iconNames[i] + ".png";
                 newIcon.style.width = "50px";
         
                 // Set animation delays to create a fade-in illusion.
@@ -240,10 +240,10 @@ function populateProjects(projects, projectNums) {
         projectStarRatingRef[i].innerHTML = "Difficulty:&nbsp";
         for (let j = 0; j < 5; j++) {
             let stars = new Image();
-            stars.src = '../media/images/misc/star-on.png';
+            stars.src = './media/images/misc/star-on.png';
 
-            if (j == Math.floor(starCnt) && Math.ceil(starCnt) > starCnt) stars.src = '../media/images/misc/star-half.png';
-            else if (j >= Math.floor(starCnt)) stars.src = '../media/images/misc/star-off.png';
+            if (j == Math.floor(starCnt) && Math.ceil(starCnt) > starCnt) stars.src = './media/images/misc/star-half.png';
+            else if (j >= Math.floor(starCnt)) stars.src = './media/images/misc/star-off.png';
 
             stars.style.width = "25px";
             projectStarRatingRef[i].appendChild(stars);
@@ -260,7 +260,7 @@ function menuShift(projects, projectNums) {
     const leftButtonRef = document.getElementById('left-button-border');
     const rightButtonRef = document.getElementById('right-button-border');
     const curtainsRef = document.getElementsByClassName('blank-curtain');
-    const buttonSound = new Audio('../media/audios/menu-shift.mp3');
+    const buttonSound = new Audio('./media/audios/menu-shift.mp3');
     buttonSound.volume = 0.3;
 
     // On left button press, shift projects to the left.
