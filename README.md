@@ -1,1 +1,7 @@
-# my-website
+# My Portfolio
+
+Welcome to my portfolio!
+
+This repository holds the source code for my website.
+
+Here is the link to my portfolio [darrenyu.net](www.darrenyu.net)
