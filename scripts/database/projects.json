@@ -1,7 +1,7 @@
 [
     {
         "title": "Portfolio Website",
-        "image": "../media/images/projects/portfolio/portfolio.png",
+        "image": "./media/images/projects/portfolio/portfolio.png",
         "abstract": "My portfolio website is used to display my projects. Each project on display has a brief project summary with a link to a detailed breakdown. My portfolio was designed and developed from scratch. The organization and animations of my portfolio show my ability to structure and style an HTML file with CSS. I use JavaScript to manipulate the HTML and make the website interactive.",
         "skill": {"JavaScript": "I used JavaScript mainly to create/modify HTML elements and generate/execute animations. I also used JS to shadow DOM sections of my page.",
                   "HTML5": "HTML was used to structure my website and hold my content.",
@@ -12,7 +12,7 @@
     },
     {
         "title": "My LC Website",
-        "image": "../media/images/projects/leetcode/leetcode.png",
+        "image": "./media/images/projects/leetcode/leetcode.png",
         "abstract": "My LeetCode website is where I publish my LeetCode solutions and attempts. I mainly problem-solve using Java or Python3 to maximize my solve times. To further develop my JS, HTML5, and CSS3 skills, I decided to create this website from scratch.",
         "skill": {"JavaScript": "JavaScript was used to help structure the HTML files of this website. I used Node.js to maintain a JSON database. Elements in this database were used to display content on the website with the help of JavaScript.",
                   "HTML5": "I used HTML5 to set up the basic page structure and create skeleton elements that awaited content.",
@@ -23,7 +23,7 @@
     },
     {
         "title": "Java GPA Calculator",
-        "image": "../media/images/about-me/javascript-icon.png",
+        "image": "./media/images/about-me/javascript-icon.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
@@ -32,7 +32,7 @@
     },
     {
         "title": "Chess Bot in C",
-        "image": "../media/images/about-me/c-icon.png",
+        "image": "./media/images/about-me/c-icon.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
@@ -41,7 +41,7 @@
     },
     {
         "title": "Web Game Mobile",
-        "image": "../media/images/about-me/java-icon.png",
+        "image": "./media/images/about-me/java-icon.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
