@@ -13,7 +13,7 @@
     {
         "title": "My LC Website",
         "image": "./media/images/projects/leetcode/leetcode.png",
-        "abstract": "My LeetCode website is where I publish my LeetCode solutions and attempts. I mainly problem-solve using Java or Python3 to maximize my solve times. To further develop my JS, HTML5, and CSS3 skills, I decided to create this website from scratch.",
+        "abstract": "My LeetCode website is where I publish my LeetCode solutions and attempts. I mainly problem-solve using Java or Python3 to maximize my solve times. Recently, I have been using other languages to practice thinking in JavaScript and C/C++. To further develop my JS, HTML5, and CSS3 skills, I decided to create this website from scratch.",
         "skill": {"JavaScript": "JavaScript was used to help structure the HTML files of this website. I used Node.js to maintain a JSON database. Elements in this database were used to display content on the website with the help of JavaScript.",
                   "HTML5": "I used HTML5 to set up the basic page structure and create skeleton elements that awaited content.",
                   "CSS3": "CSS3 was used to control the color scheme of the website to make the website more vibrant. I also used CSS3 to create some passive background animations for visual purposes."},
@@ -22,8 +22,8 @@
         "stars": 2
     },
     {
-        "title": "Java GPA Calculator",
-        "image": "./media/images/about-me/javascript-icon.png",
+        "title": "Transcript Grader",
+        "image": "./media/images/projects/grader/grader.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
@@ -31,21 +31,21 @@
         "stars": 2.5
     },
     {
-        "title": "Chess Bot in C",
-        "image": "./media/images/about-me/c-icon.png",
+        "title": "Rating Predictor",
+        "image": "./media/images/projects/predictor/predictor.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
         "number": 4,
-        "stars": 4
+        "stars": 3.5
     },
     {
-        "title": "Web Game Mobile",
-        "image": "./media/images/about-me/java-icon.png",
+        "title": "Chess Bot Website",
+        "image": "./media/images/projects/chess/chess.png",
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
         "number": 5,
-        "stars": 3.5
+        "stars": 4
     }
 ]

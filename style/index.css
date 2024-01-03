@@ -509,32 +509,7 @@ footer {
     to {transform: rotate(0deg);}
 }
 
-@keyframes descent {
-    from {transform: translateY(0%);}
-    to {transform: translateY(250%);}
-}
-
 @keyframes fade-in {
     0% {visibility: visible; opacity: 0.01;}
     100% {visibility: visible; opacity: 1;}
-}
-
-@keyframes slide1 {
-    from {transform: translateX(0%);}
-    to {transform: translateX(350%);}
-}
-
-@keyframes slide2 {
-    from {transform: translateX(0%);}
-    to {transform: translateX(233.5%);}
-}
-
-@keyframes slide3 {
-    from {transform: translateX(0%);}
-    to {transform: translateX(116.5%);}
-}
-
-@keyframes slide4 {
-    from {transform: translateX(0%);}
-    to {transform: translateX(0%);}
 }
