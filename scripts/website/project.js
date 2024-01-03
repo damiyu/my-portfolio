@@ -169,7 +169,7 @@ async function projectFill(project) {
             newLine.setAttribute('class', 'chapter-content');
             while (i < n) {
                 if (projectText[i].charCodeAt(0) != 96 && projectText[i].charCodeAt(0) != 35) {
-                    newLine.textContent += projectText[i++];
+                    newLine.textContent += projectText[i++] + " ";
                 } else {
                     i--;
                     break;

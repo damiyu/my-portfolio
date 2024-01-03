@@ -119,8 +119,9 @@ function copyGmail() {
 
 function emojiDelay() {
     const introductionRef = document.getElementById('about-me');
+    const emojiAnchorRef = document.getElementById('emoji-anchor');
     const emojiRef = document.getElementsByClassName('emoji-animated'), emojis = [];
-    let len = emojiRef.length, n = 0, k = 0;
+    let len = emojiRef.length, n = 0, k = emojiAnchorRef.offsetLeft;
 
     introductionRef.addEventListener('click', function() {
         if (n == 0) {
@@ -129,16 +130,10 @@ function emojiDelay() {
                 emojis.push(emojiRef[i].textContent);
     
                 // Add animation to each emoji with an increasing amount of delay.
-                emojiRef[i].style.animation = "descent 2s forwards";
-                emojiRef[i].style.animationDelay = n + "s";
-                n += 1.5;
-    
-                // Once a emoji has 'descented,' start the sliding animation will with displacement.
-                emojiRef[i].addEventListener('animationend', function() {
-                    emojiRef[i].style.top = "23.25vh";
-                    emojiRef[i].style.animation = "slide" + (i + 1) + " " + (2 - k) + "s forwards";
-                    k += 0.25;
-                });
+                emojiRef[i].animate([ {top: "0px", left: "0px"}, {top: emojiAnchorRef.offsetTop + "px", left: k + "px"} ], { duration: 2000, delay: n * 1000, iterations: 1, fill: "forwards" });
+                n += 1;
+                k += 80;
+
             }
     
             // Start emoji replacement when the final animation is finished.
