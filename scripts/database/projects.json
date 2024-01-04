@@ -19,16 +19,16 @@
                   "CSS3": "CSS3 was used to control the color scheme of the website to make the website more vibrant. I also used CSS3 to create some passive background animations for visual purposes."},
         "text": "../scripts/database/breakdowns/leetcode.txt",
         "number": 2,
-        "stars": 2
+        "stars": 2.5
     },
     {
         "title": "Transcript Grader",
         "image": "./media/images/projects/grader/grader.png",
-        "abstract": "Currently being developed or breakdown is not finished.",
-        "skill": {},
-        "text": "../scripts/database/breakdowns/zeta.txt",
+        "abstract": "My transcript grader is written in Java and works closely with the util, swing, and awt libraries. Java is one of my favorite programming languages, and this project is a showcase of what I can do in Java. I made a simple graphical user interface with swing and awt components. This project is an implementation of an academic transcript in Java.",
+        "skill": {"Java": "Java was used for object-oriented programming with multiple different classes. I used Java libraries like Scanner and JFrame. The scanner was used to read user input and to read text files. JFrame was used to create a simple GUI to make the program simpler."},
+        "text": "../scripts/database/breakdowns/grader.txt",
         "number": 3,
-        "stars": 2.5
+        "stars": 3
     },
     {
         "title": "Rating Predictor",
