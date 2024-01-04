@@ -1,6 +1,538 @@
-Breakdown Last Updated: Jan 1, 2024
+Breakdown Last Updated: Jan 3, 2024
 ```Link
 Link to project repository: Repository
 https://github.com/damiyu/transcript-grader
 ```
 
+# Purpose:
+As a person who enjoys a rigorous workload (20+ units per quarter), I wanted to know how receiving poor marks would affect my GPA.
+This prompted me to build a transcript grader to calculate my potential upcoming GPAs.
+The style of grader I had in mind required object-oriented programming.
+Thus, I got the opportunity to make a project in my favorite programming language, Java.
+Java would allow me to practice building command-line-operated programs and GUIs using JFrames.
+
+# Program Architecture:
+I began this project by planning the architecture and philosophy of how my transcript grader would operate.
+I came up with the following classes: Course -> Transcript -> ToolFrame -> Grader.
+The "Course" class would contain a course's name, grade, and credits.
+The "Transcript" class would hold a list of courses and use these courses to calculate GPA, total units, class level, etc.
+To modify the transcript, the object would accept commands from the command line or a text file.
+A "ToolFrame" object would be an extended version of a JFrame tailored to my GUI design.
+All commands in the "Transcript" object would be available as text fields and buttons on my GUI.
+The "Grader" class would contain my main method and handle the program type (cmd or JFrame).
+
+## Command Functionalities:
+Once I planned the architecture, it was time to decide what my transcript grader could do.
+I wanted to implement the following commands: "add", "import", "read", "print", "reset", "cls", "help", and "exit".
+The add command would take in exactly three arguments and has the following syntax: "add <course name> <course grade> <course credits>".
+This command would insert a new course into the transcript and would update the grade points and total units.
+The import command would import values into the transcript and has the following syntax: "import <grade points> <graded units> <total units>".
+The purpose of this command is to enter transfer credit or quickly calculate the GPA of the transcript.
+Next, the read command is used to avoid repetition and streamline a log of commands on a text file.
+This function has the following syntax: "read <file path>".
+To keep things simple, the file path would be relative.
+The print command would output information about the transcript and has the following command syntax: "print <gpa || lvl || scale || all>".
+The reset command is used to reset the transcript to the initialization state.
+The cls command would clear the command line.
+The help command would print the syntax of each command to help guide the user.
+The exit command would exit the program.
+
+## Mock GUI:
+To make things easier on the user, I needed to design a simple GUI that does everything the command line commands could do.
+Since I am using a JFrame, I don't need to design an exit or help button.
+Here is a draft of what I expected the GUI of my JFrame to look like:
+```Image
+../media/images/projects/grader/jframe-mock-gui.png
+Medium
+```
+
+# Class Implementation:
+Because there was a dependency chain, I had to implement the program in the following order: Course, Transcript, ToolFrame, and Grader.
+The Course and Grader class would be simple, while the other two would be where the bulk of the program was implemented.
+
+## Course Class:
+This class contained a single constructor method to initialize the name, grade, and number of units of a course.
+After initialization, the object would have three methods to retrieve the name, grade, or credits of the "Course" object.
+Here is what the Course class looks like:
+```Code
+public class Course {
+    private String courseName, courseGrade;
+    private Double courseUnits;
+
+    public Course(String courseName, String courseGrade, Double courseUnits) {
+        this.courseName = courseName;
+        this.courseGrade = courseGrade;
+        this.courseUnits = courseUnits;
+    }
+
+    public String getName() {
+        return courseName;
+    }
+
+    public String getGrade() {
+        return courseGrade;
+    }
+
+    public Double getUnits() {
+        return courseUnits;
+    }
+}
+```
+
+## Transcript Class:
+The "Transcript" class would be where I implement all the functionality of the program.
+The actual "Transcript" class has some duplicate functions that take in different arguments.
+I am only explaining a constructor method, an import function, the add function, and the print function.
+The default constructor method added a default grade scale to the transcript and initialized the private double variables to zero.
+One import function takes in three double values and adds them to the grade points, graded units, and total units variables.
+The add method requires two strings and one double value.
+This method would use these values to initialize a "Course' object and add it to the transcript.
+The print function would function as a switch statement that takes in recognized strings.
+Here are the following function codes of the class:
+```Code
+public class Transcript {
+    private PriorityQueue<Course> transcript = new PriorityQueue<>((a, b) -> { return a.getName().compareTo(b.getName()); });
+    private HashMap<String, Double> gradeVals = new HashMap<>();
+    private HashSet<String> courseList = new HashSet<>();
+    private double gradePnts, gradeUnits, totUnits;
+
+    /**
+     * This is the default contructor and it sets the default grade point scale and initializes all values to zero.
+     */
+    public Transcript() {
+        gradeVals.put("A+", 4.0);
+        gradeVals.put("A", 4.0);
+        gradeVals.put("A-", 3.7);
+        gradeVals.put("B+", 3.3);
+        gradeVals.put("B", 3.0);
+        gradeVals.put("B-", 2.7);
+        gradeVals.put("C+", 2.3);
+        gradeVals.put("C", 2.0);
+        gradeVals.put("C-", 1.7);
+        gradeVals.put("D", 1.0);
+        gradeVals.put("F", 0.0);
+
+        gradePnts = 0.0;
+        gradeUnits = 0.0;
+        totUnits = 0.0;
+    }
+
+    ...
+
+    /**
+     * An import function to import only grade points, graded units, and total units.
+     * 
+     * @param newGradePnts Grade points imported to the transcript
+     * @param newgradeUnits Graded units imported to the transcript
+     * @param newUnits Total units imported to the transcript
+     */
+    public void importGrades(double newGradePnts, double newgradeUnits, double newUnits) {
+        gradePnts += newGradePnts;
+        gradeUnits += newgradeUnits;
+        totUnits += newUnits;
+    }
+
+    ...
+
+    /**
+     * This function adds a course to the transcript. Repeat course titles are ignored
+     * and returned with a warning message. Grades not specified in the grade scale are
+     * accepted, but are treated as P/NP or S/US units.
+     * 
+     * @param courseName The name of the course being added to the transcript
+     * @param letterGrade The grade associated with the course
+     * @param units The number of units the course is worth
+     */
+    public void addGrade(String courseName, String letterGrade, Double units) {
+        if (courseList.contains(courseName)) {
+            System.out.println("\"" + courseName + "\" already exists in your transcript!");
+            return;
+        }
+
+        transcript.add(new Course(courseName, letterGrade, units));
+        courseList.add(courseName);
+        gradePnts += gradeVals.containsKey(letterGrade) ? gradeVals.get(letterGrade) * units : 0;
+        gradeUnits += gradeVals.containsKey(letterGrade) ? units : 0;
+        totUnits += units;
+    }
+
+    ...
+
+    /**
+     * A print function used to print out information about the transcript. The printed
+     * information depends on the specific input. This function can print just the GPA,
+     * GPA + student level, GPA + student level + grade scale, or the whole transcript.
+     * When the course list is empty, or if there are no graded units, the function gives
+     * a warning message at that section of output.
+     * 
+     * @param printType Acceptable strings are "gpa", "lvl", "scale", or "all"
+     */
+    public void printGrades(String printType) {
+        switch (printType) {
+            case "all":
+                System.out.println("\nYour Course Transcript:");
+
+                // Get the transcript and print the courses in alphabetical order by course name.
+                PriorityQueue<Course> sortedCourses = new PriorityQueue<>((a, b) -> { return a.getName().compareTo(b.getName()); });
+                sortedCourses.addAll(transcript);
+                while (!sortedCourses.isEmpty()) {
+                    Course c = sortedCourses.poll();
+                    System.out.println(c.getName() + ", Grade Received: " + c.getGrade() + ", Units: " + c.getUnits());
+                }
+            case "scale":
+                System.out.println("\nGrade Scale:");
+
+                // Retrieve the key-value pairs of the grade scale and store it in a 2D String array.
+                String[][] preSort = new String[gradeVals.size()][2];
+                int i = 0;
+                for (String s : gradeVals.keySet()) {
+                    preSort[i][0] = s;
+                    preSort[i++][1] = Double.toString(gradeVals.get(s));
+                }
+
+                // Sort the grade scale through the point values in descending order.
+                Arrays.sort(preSort, (a, b) -> {
+                    // If point values are the same, sort by the reverse letter grade.
+                    if (a[1].compareTo(b[1]) == 0) return -a[0].compareTo(b[0]);
+                    return -a[1].compareTo(b[1]);
+                });
+
+                // Print the sorted grade scale (A+ : 4.0 \n A : 4.0 \n A- : 3.7 \n etc.)
+                for (String[] s : preSort) System.out.println(s[0] + " : " + s[1]);
+            case "lvl":
+                int gradeLvl = (int) totUnits / 45;
+                gradeLvl = gradeLvl > 3 ? 3 : gradeLvl;
+                
+                String[] level = {"Freshman", "Sophomore", "Junior", "Senior"};
+                System.out.println("\nYour Grade Level: " + level[gradeLvl]);
+            case "gpa":
+                double GPA = 0.0;
+                try {
+                    GPA = gradePnts / gradeUnits;
+                } catch (Exception e) {
+                    System.out.println("Cannot divide by zero, unable to print GPA because you don't have any graded units!");
+                    return;
+                };
+
+                GPA = Math.round(GPA * 1000) / 1000.0;
+                System.out.println("\nYour GPA: " + GPA + "\nTotal Units: " + totUnits + "");
+                break;
+            default:
+                System.out.println("\"" + printType + "\" is a invalid printing type, please try again!");
+                break;
+        }
+    }
+
+    ...
+}
+```
+
+## Command Line Example:
+The command line function depended on two arguments, a boolean and a string.
+The boolean is a statement of whether the scan is on the command prompt or not.
+A true would mean the scanner would be directed at "System.in".
+A false would mean the scanner would use the string argument as a file path to a text file.
+Once a scanner option has been picked, the scanner will start reading from the cmd or text file.
+Each line read would go through a giant switch statement to determine the command requested.
+Invalid commands or arguments would be caught and would result in warning messages.
+Valid commands would be processed accordingly, and the desired command would be executed on the "Transcript" object.
+Here is the code:
+```Code
+    ...
+
+    /**
+     * This scanning function allows a transcript object to be modified through
+     * the command line and/or through a text file. Invalid modifications would
+     * be caught and responded to with an error message. The scanning function
+     * only supports the following functions: import (values only), add, print,
+     * reset. The 'read' command will scan another text file, and end this scan
+     * instance before exiting. Input the command 'exit' to leave this function.
+     * 
+     * @param userInput A boolean to specify command line use or text file scan
+     * @param file The path to the text file, not used if 'userInput' is true
+     */
+    public void gradeScan(Boolean userInput, String file) {
+        Scanner cmdScan;
+
+        // Attempt the following scan and return if failed.
+        try {
+            if (userInput) {
+                cmdScan = new Scanner(System.in);
+            } else {
+                File readFile = new File(file);
+                cmdScan = new Scanner(readFile);
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid file path, please try again!");
+            return;
+        }
+
+        // A constant loop that processes input commands and print error messages.
+        if (userInput) System.out.println("\nAwaiting user input:");
+        while (cmdScan.hasNextLine()) {
+            String[] cmdArgs = cmdScan.nextLine().split(" ");
+            int argCnt = cmdArgs.length;
+
+            String cmd = cmdArgs[0].toLowerCase();
+            if (cmd == "") continue;
+            switch (cmd) {
+                case "import":
+                    if (argCnt == 4) {
+                        try {
+                            importGrades(Double.valueOf(cmdArgs[1]), Double.valueOf(cmdArgs[2]), Double.valueOf(cmdArgs[3]));
+                        } catch (Exception e) {
+                            System.out.println("Invalid import values, try again!");
+                        }
+                    } else {
+                        System.out.println("Invalid import argument count.");
+                        System.out.println("Must be in the format \"import <grade points> <graded units> <total units>\".");
+                    }
+                    break;
+                case "add":
+                    int quoteIdxBegin = -1, quoteIdxEnd = -1;
+
+                    // Attempt to find course titles seperated by spaces wrapped around double quotes.
+                    for (int i = 1; i < argCnt; i++) {
+                        if (cmdArgs[i].contains("\"")) { 
+                            if (quoteIdxBegin == -1) quoteIdxBegin = i;
+                            else quoteIdxEnd = i + 1;
+                        }
+                    }
+
+                    // There should only be two arguments after the last double quote.
+                    if (quoteIdxBegin != -1 && quoteIdxEnd != -1 && argCnt == quoteIdxEnd + 2) {
+                        argCnt = 4;
+                        cmdArgs[1] = String.join(" ", Arrays.copyOfRange(cmdArgs, quoteIdxBegin, quoteIdxEnd));
+                        cmdArgs[2] = cmdArgs[cmdArgs.length - 2];
+                        cmdArgs[3] = cmdArgs[cmdArgs.length - 1];
+                    }
+
+                    if (argCnt == 4) {
+                        try {
+                            addGrade(cmdArgs[1], cmdArgs[2], Double.valueOf(cmdArgs[3]));
+                        } catch (Exception e) {
+                            System.out.println("Invalid add values, try again!");
+                        }
+                    } else {
+                        System.out.println("Invalid add argument count.");
+                        System.out.println("Must be in the format \"add <course name> <course grade> <course credits>\".");
+                    }
+                    break;
+                case "print":
+                    if (argCnt == 2) {
+                        printGrades(cmdArgs[1]);
+                    } else {
+                        System.out.println("Invalid print argument count.");
+                        System.out.println("Must be in the format \"print (gpa || lvl || scale || all)\".");
+                    }
+                    break;
+                case "reset":
+                    resetGrades();
+                    break;
+                case "read":
+                    if (argCnt == 2) {
+                        gradeScan(false, cmdArgs[1]);
+                    } else {
+                        System.out.println("Invalid read argument count.");
+                        System.out.println("Must be in the format \"read <file path>\".");
+                    }
+                    break;
+                case "cls":
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                    break;
+                case "help":
+                    System.out.println("\nCommand Syntax:");
+                    System.out.println("add <course name> <course grade> <course credits>");
+                    System.out.println("import <grade points> <graded units> <total units>");
+                    System.out.println("read <file path>");
+                    System.out.println("print (gpa || lvl || scale || all)");
+                    System.out.println("reset");
+                    System.out.println("cls");
+                    System.out.println("exit");
+                    System.out.println("help");
+                    break;
+                case "exit":
+                    cmdScan.close();
+                    return;
+                default:
+                    System.out.println("\"" + String.join(" ", cmdArgs) + "\" is an invalid command, try again!");
+                    break;
+            }
+
+            if (userInput) System.out.println("\nAwaiting user input:");
+        }
+
+        cmdScan.close();
+    }
+
+    ...
+```
+
+## ToolFrame Class:
+Once the command line part of the program was implemented, the GUI implementation would be accelerated.
+The "ToolFrame" class would have two public and three private methods.
+The constructor method would initialize the dimensions of the JFrame and then call the three private methods.
+The second public method would activate the JFrame.
+The three private methods would help build the text labels, text fields, and buttons of the JFrame.
+Here is the code of the public methods and an image of the GUI:
+```Code
+public class ToolFrame extends JFrame {
+    private Transcript transcript;
+    private HashMap<String, JLabel> someLabels;
+    private HashMap<String, JTextField> allTextFields;
+    private HashMap<String, JComboBox<String>> allDropDowns;
+
+    /**
+     * A constructor method to create a "500x500" unresizable JFrame.
+     */
+    public ToolFrame(Transcript transcript) {
+        ImageIcon icon = new ImageIcon("./src/media/frame-icon.png");
+
+        someLabels = new HashMap<>();
+        allTextFields = new HashMap<>();
+        allDropDowns = new HashMap<>();
+        this.transcript = transcript;
+        this.setTitle("My Transcript");
+        this.setIconImage(icon.getImage());
+        this.setSize(500, 500);
+        this.setResizable(false);
+        this.setLayout(null);
+        this.getContentPane().setBackground(new Color(162, 210, 223));
+
+        buildLabels();
+        buildInteracticeFields();
+        buildButtons();
+    }
+
+    /**
+     * This function is used to turn on the JFrame.
+     */
+    public void launchFrame() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+    }
+
+    ...
+}
+```
+```Image
+../media/images/projects/grader/jframe-gui.png
+Medium
+```
+
+## Grader Class:
+Once everything is built, it's time to put everything together and test the program.
+Below is the code of the "Grader" class and a sample of the program using the command line:
+```Code
+public class Grader {
+    public static void main(String[] args) {
+        Transcript transcript = new Transcript();
+        ToolFrame tools = new ToolFrame(transcript);
+
+        if (args.length == 1 && args[0].compareTo("frame") == 0) {
+            // Update the transcript with a JFrame.
+            tools.launchFrame();
+        } else {
+            // Update the transcript on the command line.
+            transcript.gradeScan(true, null);
+        }
+    }
+}
+```
+```Code
+> make cmd
+javac ./src/*.java
+java ./src/Grader.java cmd
+
+Awaiting user input:
+> add MATH-100A A 4.0
+
+Awaiting user input:
+> add CHEM-7L B- 2.0
+
+Awaiting user input:
+> print gpa
+
+Your GPA: 3.567
+Total Units: 6.0
+
+Awaiting user input:
+> read ./transcripts/sample1.txt
+
+Your GPA: 3.282
+Total Units: 22.0
+
+Awaiting user input:
+> print all
+
+Your Course Transcript:
+CHEM-7L, Grade Received: B-, Units: 2.0
+MATH-100A, Grade Received: A, Units: 4.0
+MATH-20C, Grade Received: B-, Units: 4.0
+MMW-11, Grade Received: C+, Units: 4.0
+PHYS-2A, Grade Received: A, Units: 4.0
+SE-1, Grade Received: A-, Units: 4.0
+
+Grade Scale:
+A+ : 4.0
+A : 4.0
+A- : 3.7
+B+ : 3.3
+B : 3.0
+B- : 2.7
+C+ : 2.3
+C : 2.0
+C- : 1.7
+D : 1.0
+F : 0.0
+
+Your Grade Level: Freshman
+
+Your GPA: 3.282
+Total Units: 22.0
+
+Awaiting user input:
+> help
+
+Command Syntax:
+add <course name> <course grade> <course credits>
+import <grade points> <graded units> <total units>
+read <file path>
+print (gpa || lvl || scale || all)
+reset
+cls
+exit
+help
+
+Awaiting user input:
+> reset
+
+Awaiting user input:
+> print gpa
+
+Your GPA: 0.0
+Total Units: 0.0
+
+Awaiting user input:
+> import 37.0 16.0 48.0
+
+Awaiting user input:
+> print lvl
+
+Your Grade Level: Sophomore
+
+Your GPA: 2.313
+Total Units: 48.0
+
+Awaiting user input:
+> exit
+```
+
+# Conclusion:
+In conclusion, I had a lot of fun creating the transcript grader.
+I'm pleased with what I made, and it worked exactly how I planned.
+The careful planning of this project made a straightforward pipeline with zero hiccups.
+Like my other projects, I plan on updating the grader by adding more features.
+I think adding a "Syllabus" class to calculate individual course components (homework, quizzes, tests, etc.) would be a cool add-on.
+Another thing I could add is to do a rework of the GUI and make a dual command line and JFrame option.
