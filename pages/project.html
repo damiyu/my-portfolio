@@ -13,14 +13,14 @@
         <div id="title-border"><p id="title-text">Darren's Portfolio</p></div>
 
         <div id="links-div">
-            <img id="gmail-icon-link" src="../media/images/misc/gmail-icon.png"/>
+            <img id="gmail-icon-link" src="../media/images/misc/gmail-icon.png" alt="icon">
 
             <a id="github-link" href="https://github.com/damiyu" target="_blank" rel="noopener noreferrer">
-                <img id="github-icon-link" src="../media/images/misc/github-icon.png"/>
+                <img id="github-icon-link" src="../media/images/misc/github-icon.png" alt="icon">
             </a>
 
             <a id="linkedin-link" href="https://www.linkedin.com/in/darren-yu-a38913246" target="_blank" rel="noopener noreferrer">
-                <img id="linkedin-icon-link" src="../media/images/misc/linkedin-icon.png"/>
+                <img id="linkedin-icon-link" src="../media/images/misc/linkedin-icon.png" alt="icon">
             </a>
         </div>
 
@@ -32,6 +32,14 @@
 
         <div id="message-display">
             <div id="box-prompt"><span id="box-prompt-char">&gt;</span></div>
+        </div>
+
+        <div id="search-bar-container-border">
+            <div id="search-bar-container">
+                <img id="search-icon" src="https://cdn-icons-png.flaticon.com/512/149/149852.png" alt="bar">
+                <datalist id="project-names"></datalist>
+                <input id="search-bar" list="project-names" placeholder="Search ..." autocomplete="off"></div>
+            </div>
         </div>
     </div>
 
@@ -64,7 +72,10 @@
     </div>
 
     <footer>
-        <div id="copy-right"><p id="copy-right-text">&copy; 2023-2024 Darren Yu | Developer/Designer: Darren Yu | v1.1.1</p></div>
+        <div id="copy-right">
+            <p id="copy-right-text">&copy; 2023-2024 Darren Yu</p>
+            <p id="version"></p>
+        </div>
     </footer>
 
     <script src="../scripts/website/project.js" type="module"></script>

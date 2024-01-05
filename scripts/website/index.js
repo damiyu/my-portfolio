@@ -19,6 +19,7 @@ async function init() {
                 "I recommend reading about my portfolio project...\0",
                 "\0"];
     messageDisplay(msgs);
+    setVersion()
     returnHome();
     copyGmail();
     emojiDelay();
@@ -27,6 +28,7 @@ async function init() {
 
     let projects = await Util.getJSON('../database/projects.json');
     let projectNums = [0, 1, 2];
+    searchItem(projects);
     populateProjects(projects, projectNums);
     menuShift(projects, projectNums);
     projectSelect(projectNums);
@@ -100,6 +102,13 @@ function messageDisplay(msgs) {
     }
 }
 
+async function setVersion() {
+    const versionTextRef = document.getElementById('version');
+    const readMe = await fetch("./README.md"), readMeText = (await readMe.text()).split('\n');
+
+    versionTextRef.textContent = readMeText[readMeText.length - 1];
+}
+
 function returnHome() {
     const homeTitleRef = document.getElementById('title-border');
 
@@ -120,33 +129,17 @@ function copyGmail() {
 function emojiDelay() {
     const introductionRef = document.getElementById('about-me');
     const emojiAnchorRef = document.getElementById('emoji-anchor');
-    const emojiRef = document.getElementsByClassName('emoji-animated'), emojis = [];
+    const emojiRef = document.getElementsByClassName('emoji-animated');
     let len = emojiRef.length, n = 0, k = emojiAnchorRef.offsetLeft;
 
     introductionRef.addEventListener('click', function() {
         if (n == 0) {
-            for (let i = 0; i < len; i++) {
-                // Store emoji for replacement later on.
-                emojis.push(emojiRef[i].textContent);
-    
+            for (let i = 0; i < len; i++) {    
                 // Add animation to each emoji with an increasing amount of delay.
-                emojiRef[i].animate([ {top: "0px", left: "0px"}, {top: emojiAnchorRef.offsetTop + "px", left: k + "px"} ], { duration: 2000, delay: n * 1000, iterations: 1, fill: "forwards" });
+                emojiRef[i].animate([ {top: "0px", left: "0px"}, {top: emojiAnchorRef.offsetTop + "px", left: k + "px", visibility: "visible"} ], { duration: 2000, delay: n * 1000, iterations: 1, fill: "forwards" });
                 n += 1;
                 k += 80;
-
             }
-    
-            // Start emoji replacement when the final animation is finished.
-            emojiRef[len - 1].addEventListener('animationend', function() {
-                const stillRef = document.getElementsByClassName('emoji-still');
-    
-                // Hide old emoji span and show the new emoji span.
-                for (let i = 0; i < len; i++) emojiRef[i].style.visibility = "hidden";
-                for (let i = 0; i < len; i++) {
-                    stillRef[i].style.visibility = "visible";
-                    stillRef[i].textContent = emojis[len - 1 - i];
-                }
-            });
         }
     });
 }
@@ -222,8 +215,44 @@ function shadowShift(n, idx, isDec) {
     }
 }
 
+function searchItem(projects) {
+    const searchIconRef = document.getElementById('search-icon');
+    const searchBarRef = document.getElementById('search-bar');
+    const searchBarList = document.getElementById('project-names');
+    let projectMapping = {};
+
+    for (const p of projects) {
+        let newOption = document.createElement('option');
+
+        projectMapping[p.title] = p.number - 1;
+        newOption.textContent = p.title;
+        searchBarList.appendChild(newOption);
+    }
+
+    searchIconRef.addEventListener('click', function() {
+        if (searchBarRef.value in projectMapping) {
+            localStorage.setItem('project-idx', projectMapping[searchBarRef.value]);
+            window.location = "./pages/project.html";
+        } else {
+            alert("Sorry, but this project name doesn't exist!");
+        }
+    });
+
+    searchBarRef.addEventListener('keypress', function(e) {
+        if (e.key === "Enter") {
+            if (searchBarRef.value in projectMapping) {
+                localStorage.setItem('project-idx', projectMapping[searchBarRef.value]);
+                window.location = "./pages/project.html";
+            } else {
+                alert("Sorry, but this project name doesn't exist!");
+            }
+        }
+    });
+}
+
 function populateProjects(projects, projectNums) {
     const projectNumberRef = document.getElementsByClassName('project-number');
+    const projectTypeRef = document.getElementsByClassName('project-development-type');
     const projectImagesRef = document.getElementsByClassName('project-image');
     const projectStarRatingRef = document.getElementsByClassName('star-difficulty-container');
     const projectTitlesRef = document.getElementsByClassName('project-title');
@@ -245,6 +274,7 @@ function populateProjects(projects, projectNums) {
         }
 
         projectNumberRef[i].textContent = projects[projectNums[i]].number;
+        projectTypeRef[i].textContent = projects[projectNums[i]].type;
         projectImagesRef[i].src = projects[projectNums[i]].image;
         projectTitlesRef[i].textContent = projects[projectNums[i]].title;
         projectTextsRef[i].innerHTML = projects[projectNums[i]].abstract;
