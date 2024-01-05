@@ -52,15 +52,10 @@ footer {
     background-image: linear-gradient(90deg, rgb(0, 0, 0, 0%) 0% 20%, rgb(0, 0, 0, 40%), rgb(0, 0, 0, 60%));
 }
 
-.emoji-still {
-    visibility: hidden;
-    font-style: normal;
-}
-
 .emoji-animated {
     position: absolute;
+    visibility: hidden;
     font-style: normal;
-    top: 6vh;
 }
 
 .icon-load {
@@ -92,6 +87,39 @@ footer {
     justify-content: center;
     height: 255px;
     width: 255px;
+}
+
+.development-example {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.development-type,
+.project-development-type {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    border: 2px solid blue;
+
+    font: bold 16px "Play";
+    color: aliceblue;
+    background-image: linear-gradient(135deg, orange, red);
+}
+
+.project-development-type {
+    position: absolute;
+    margin-bottom: 200px;
+    margin-left: 200px;
+}
+
+.development-type-text {
+    font: bold 20px "Play";
+    color: navy;
 }
 
 .blank-curtain {
@@ -266,10 +294,56 @@ footer {
     align-items: center;
     justify-content: left;
     width: 50vw;
+    margin-right: 1vw;
 }
 
 #box-prompt {
     opacity: 1;
+}
+
+#search-bar-container-border {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    width: 20vw;
+    border: 0.25vw solid darkgoldenrod;
+    border-radius: 10vw;
+    background-image: linear-gradient(90deg, yellow, gold, yellow);
+}
+
+#search-bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    height: 8vh;
+    width: 19vw;
+    border: 0.25vw solid darkgoldenrod;
+    border-radius: 10vw;
+    background-color: aliceblue;
+}
+
+#search-icon {
+    width: 2vw;
+    margin-left: 0.5vw;
+    margin-right: 0.5vw;
+}
+
+#search-icon:hover {
+    cursor: pointer;
+}
+
+#search-bar {
+    height: 5vh;
+    width: 14vw;
+    padding: 0px;
+    border: none;
+    outline: none;
+
+    font: bold 1.2vw "Georama";
+    background-color: aliceblue;
 }
 
 #introduction {
@@ -366,6 +440,25 @@ footer {
     justify-content: center;
 }
 
+#project-type-list {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    height: 120px;
+    width: 300px;
+    margin-right: 50px;
+    gap: 10px;
+    background-color: transparent;
+}
+
+#project-type-counter {
+    height: 120px;
+    width: 300px;
+    margin-left: 50px;
+    background-color: transparent;
+}
+
 #project-title-text {
     border: 6px double orange;
     border-radius: 10px;
@@ -442,7 +535,7 @@ footer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: left;
+    justify-content: space-between;
     position: fixed;
     height: 8vh;
     width: 100vw;
@@ -458,6 +551,17 @@ footer {
 
     font: bold 2.5vh "Poiret One";
     color: white;
+}
+
+#version {
+    margin-right: 2vw;
+
+    font: bold 2.5vh "Play";
+    color: gold;
+}
+
+input::-webkit-calendar-picker-indicator {
+    opacity: 0;
 }
 
 @font-face {

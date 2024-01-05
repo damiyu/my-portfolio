@@ -8,7 +8,8 @@
                   "CSS3": "CSS was used to style elements in the HTML file and run CSS animations."},
         "text": "../scripts/database/breakdowns/portfolio.txt",
         "number": 1,
-        "stars": 3
+        "stars": 3,
+        "type": "AD"
     },
     {
         "title": "My LC Website",
@@ -19,7 +20,8 @@
                   "CSS3": "CSS3 was used to control the color scheme of the website to make the website more vibrant. I also used CSS3 to create some passive background animations for visual purposes."},
         "text": "../scripts/database/breakdowns/leetcode.txt",
         "number": 2,
-        "stars": 2.5
+        "stars": 2.5,
+        "type": "AD"
     },
     {
         "title": "Transcript Grader",
@@ -28,7 +30,8 @@
         "skill": {"Java": "Java was used for object-oriented programming with multiple different classes. I used Java libraries like Scanner and JFrame. The scanner was used to read user input and to read text files. JFrame was used to create a simple GUI to make the program simpler."},
         "text": "../scripts/database/breakdowns/grader.txt",
         "number": 3,
-        "stars": 3
+        "stars": 3,
+        "type": "AD"
     },
     {
         "title": "Rating Predictor",
@@ -37,7 +40,8 @@
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
         "number": 4,
-        "stars": 3.5
+        "stars": 3.5,
+        "type": "IP"
     },
     {
         "title": "Chess Bot Website",
@@ -46,6 +50,7 @@
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
         "number": 5,
-        "stars": 4
+        "stars": 4,
+        "type": "IP"
     }
 ]

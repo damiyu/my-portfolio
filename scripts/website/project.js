@@ -19,8 +19,10 @@ async function init() {
     selectProject = selectProject != null ? selectProject : projects[0];
     let msgs = ["Loading...\0", selectProject.title + "...\0"];
     messageDisplay(msgs);
+    setVersion();
     returnHome();
     copyGmail();
+    searchItem(projects);
     projectFill(selectProject);
 
     // Apply a loading screen so the shadow DOM can completely loaded before viewing.
@@ -100,6 +102,13 @@ function messageDisplay(msgs) {
     }
 }
 
+async function setVersion() {
+    const versionTextRef = document.getElementById('version');
+    const readMe = await fetch("../README.md"), readMeText = (await readMe.text()).split('\n');
+
+    versionTextRef.textContent = readMeText[readMeText.length - 1];
+}
+
 function returnHome() {
     const homeTitleRef = document.getElementById('title-border');
 
@@ -114,6 +123,41 @@ function copyGmail() {
     gmailLinkRef.addEventListener('click', function() {
         navigator.clipboard.writeText("darrenyu2003@gmail.com");
         alert("Gmail Copied to Clipboard");
+    });
+}
+
+function searchItem(projects) {
+    const searchIconRef = document.getElementById('search-icon');
+    const searchBarRef = document.getElementById('search-bar');
+    const searchBarList = document.getElementById('project-names');
+    let projectMapping = {};
+
+    for (const p of projects) {
+        let newOption = document.createElement('option');
+
+        projectMapping[p.title] = p.number - 1;
+        newOption.textContent = p.title;
+        searchBarList.appendChild(newOption);
+    }
+
+    searchIconRef.addEventListener('click', function() {
+        if (searchBarRef.value in projectMapping) {
+            localStorage.setItem('project-idx', projectMapping[searchBarRef.value]);
+            window.location = "./project.html";
+        } else {
+            alert("Sorry, but this project name doesn't exist!");
+        }
+    });
+
+    searchBarRef.addEventListener('keypress', function(e) {
+        if (e.key === "Enter") {
+            if (searchBarRef.value in projectMapping) {
+                localStorage.setItem('project-idx', projectMapping[searchBarRef.value]);
+                window.location = "./project.html";
+            } else {
+                alert("Sorry, but this project name doesn't exist!");
+            }
+        }
     });
 }
 

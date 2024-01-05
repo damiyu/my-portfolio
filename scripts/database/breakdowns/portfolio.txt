@@ -1,4 +1,4 @@
-Breakdown Last Updated: Nov 23, 2023
+Breakdown Last Updated: Jan 4, 2023
 ```Link
 Link to project repository: Repository
 https://github.com/damiyu/my-portfolio
@@ -313,3 +313,10 @@ Another feature I might want to add is a button to switch the project box from w
 Presenting only three projects at a time is limiting if I have more projects to show.
 I plan to add these features and many more improvements in the future when I have time.
 I also plan to make my portfolio website mobile responsive.
+
+# Update v1.2.1:
+Since its initial release, I have fixed the issue with the emoji animation and incorrect spacing of breakdown sentences.
+Some minor design changes were added to make updating the website easier.
+I have also added a search bar to my portfolio to help a visitor search for specific project titles.
+To add more information about my projects, I added a project tag to signify if a project is being updated, discontinued, or in development.
+Next on my development list is making my portfolio mobile responsive and implementing the multi-panel project box.
