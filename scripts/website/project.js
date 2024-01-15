@@ -79,7 +79,7 @@ function messageDisplay(msgs) {
             if (messageDisplayRef.children.length > fstMsgLen) fstMsgDone = true;
             if (fstMsgDone) newBox.style.display = "none";
             newBox.setAttribute('class', 'box-blink');
-            newBox.style.animation = msgs[i][j] != '\0' ? "blink-show 1s 1 forwards" : "blink-hover 1s 3 forwards";
+            newBox.style.animation = msgs[i][j] != '\0' ? "blink-show 1s 1 forwards" : "blink-hover 1s 1.5 forwards";
             if (msgs[i][j] == '\0' && i == n - 1) newBox.style.animation = "blink-hover 1s infinite forwards";
             newBox.style.animationDelay = s + "s";
             s += 0.05;
@@ -293,7 +293,7 @@ function mediaBuilder(projectText, idx) {
 
 function loadingScreen(n) {
     // Perform three bubble bounces (1 second apart) before stopping and revealing the project contents.
-    if (n[6]++ < 3) {
+    if (n[6]++ < 2) {
         bubbleBounce();
         setTimeout(loadingScreen, 1000, n);
     }
