@@ -14,15 +14,16 @@ async function init() {
     let n = [-5, -5, -5, false, false, false];
     setInterval(toolBarStripes, 10, n);
 
-    let msgs = ["Welcome to my portfolio...\0",
+    let msgs = ["Hello, welcome to my portfolio...\0",
                 "My projects are located under my introduction...\0",
-                "I recommend reading about my portfolio project...\0",
+                "I recommend beginning with my portfolio website...\0",
+                "My second reading recommendation is my transcript project...",
                 "\0"];
     messageDisplay(msgs);
     setVersion()
     returnHome();
     copyGmail();
-    emojiDelay();
+    pictureDelay();
     iconLoad();
     projectShadows();
 
@@ -126,20 +127,24 @@ function copyGmail() {
     });
 }
 
-function emojiDelay() {
+function pictureDelay() {
     const introductionRef = document.getElementById('about-me');
-    const emojiAnchorRef = document.getElementById('emoji-anchor');
-    const emojiRef = document.getElementsByClassName('emoji-animated');
-    let len = emojiRef.length, n = 0, k = emojiAnchorRef.offsetLeft;
+    let cnt = 0;
 
+    // Detect when a user clicks the paragraph and prepare the animation.
     introductionRef.addEventListener('click', function() {
-        if (n == 0) {
-            for (let i = 0; i < len; i++) {    
-                // Add animation to each emoji with an increasing amount of delay.
-                emojiRef[i].animate([ {top: "0px", left: "0px"}, {top: emojiAnchorRef.offsetTop + "px", left: k + "px", visibility: "visible"} ], { duration: 2000, delay: n * 1000, iterations: 1, fill: "forwards" });
-                n += 1;
-                k += 80;
-            }
+        const pictureAnchorRef = document.getElementById('picture-anchor');
+        const pictureRef = document.getElementsByClassName('picture-animated');
+        let len = pictureRef.length, k = pictureAnchorRef.offsetLeft + 10;
+
+        // If animations are active, don't allow reanimations.
+        if (cnt == 3) return;
+
+        for (let i = 0; i < len; i++) {
+            // Add animation to each image with an increasing amount of delay.
+            pictureRef[i].animate([ {top: "0px", left: "0px"}, {top: pictureAnchorRef.offsetTop + "px", left: k + "px", visibility: "visible"} ], { duration: 2000, delay: cnt * 1000, iterations: 1, fill: "forwards" });
+            cnt += 1;
+            k += 80;
         }
     });
 }
@@ -147,7 +152,7 @@ function emojiDelay() {
 function iconLoad() {
     const skillRef = document.getElementById('qualification');
     const skillContainerRef = document.getElementById('skill-container');
-    const iconNames = ["java-icon","python-icon","c-icon","cplusplus-icon","javascript-icon","html-icon","css-icon"];
+    const iconNames = ["java-icon","python-icon","c-icon","cplusplus-icon","haskell-icon","javascript-icon","html-icon","css-icon"];
     let len = iconNames.length, n = 0.5;
 
     skillRef.addEventListener('click', function() {
@@ -157,7 +162,8 @@ function iconLoad() {
                 const newIcon = document.createElement('img');
                 newIcon.setAttribute('class', 'icon-load');
                 newIcon.src = "./media/images/about-me/"+ iconNames[i] + ".png";
-                newIcon.style.width = "50px";
+                newIcon.style.width = "35px";
+                newIcon.style.marginBottom = "5px";
         
                 // Set animation delays to create a fade-in illusion.
                 newIcon.style.animationDelay = (n * i) + "s";
@@ -188,13 +194,13 @@ function projectShadows() {
 
     // Cast shadows on projects that are hovered.
     for (let i = 0; i < 3; i++) {
-        boxRefs[i].addEventListener('mouseenter', function() {
+        boxRefs[i].addEventListener('mouseover', function() {
             // Stop increasing and begin to decrease.
             clearInterval(n[3 * i + 1]);
             n[3 * i + 2] = setInterval(shadowShift, 3, n, 3 * i, true);
         });
 
-        boxRefs[i].addEventListener('mouseleave', function() {
+        boxRefs[i].addEventListener('mouseout', function() {
             // Stop decreasing and begin to increase.
             clearInterval(n[3 * i + 2]);
             n[3 * i + 1] = setInterval(shadowShift, 15, n, 3 * i, false);
@@ -207,7 +213,7 @@ function shadowShift(n, idx, isDec) {
 
     // Shifts the shadow and stops under/over flow.
     if (isDec) {
-        if (n[idx] < 100) return;
+        if (n[idx] < 150) return;
         shadowRefs[idx / 3].style.width = n[idx]-- + "px";
     } else {
         if (n[idx] > 250) return;

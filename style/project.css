@@ -46,15 +46,19 @@ footer {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    height: 5vh;
-    width: 1vw;
+    height: 4vh;
+    width: 0.8vw;
     opacity: 0;
     background-color: transparent;
 }
 
 .box-char, #box-prompt-char {
-    font: bold 1.2vw "Consolas";
+    font: bold 1.5vw "Consolas";
     color: white;
+}
+
+#box-prompt-char {
+    margin-right: 1vw;
 }
 
 .bubble {
@@ -62,7 +66,7 @@ footer {
     visibility: hidden;
     margin-top: 35vh;
     font: bold 3.5vw "Abril";
-    color: bisque;
+    color: white;
 }
 
 .tof-chapter {
@@ -276,7 +280,7 @@ footer {
     left: 0;
     z-index: 1;
     animation: loading-screen 500ms 1;
-    animation-delay: 3500ms;
+    animation-delay: 2000ms;
     background-color: rgb(100, 100, 100);
 }
 
@@ -289,7 +293,7 @@ footer {
     border-radius: 1.5vw;
 
     font: italic bold 1.5vw "Play";
-    color: bisque;
+    color: white;
     background-color: black;
 }
 
