@@ -3,17 +3,6 @@ import * as Util from './utilities.js';
 init();
 
 async function init() {
-    /*
-     * leftStripePos = n[0]; The position of the left-most stripe.
-     * middleStripePos = n[1]; The position of the center stripe.
-     * rightStripePos = n[2]; The position of the right-most stripe.
-     * isLeftReverse = n[3]; A boolean to check when it's time to reverse the left stripe.
-     * isMiddleReverse = n[4]; A boolean to check when it's time to reverse the middle stripe.
-     * isRightReverse = n[5]; A boolean to check when it's time to reverse the right stripe.
-     */
-    let n = [-5, -5, -5, false, false, false];
-    setInterval(toolBarStripes, 10, n);
-
     let msgs = ["Hello, welcome to my portfolio...\0",
                 "My projects are located under my introduction...\0",
                 "I recommend beginning with my portfolio website...\0",
@@ -23,48 +12,22 @@ async function init() {
     setVersion()
     returnHome();
     copyGmail();
-    pictureDelay();
-    iconLoad();
-    projectShadows();
 
-    let projects = await Util.getJSON('../database/projects.json');
+
+    let icns = ["java-icon.png", "python-icon.png", "c-icon.png",
+                "cplusplus-icon.png", "haskell-icon.png", "javascript-icon.png"];
+    iconLoad(icns, 'qualification', 'skill-container');
+
+    let imgs = ["profile-picture.jpg", "ucsd-library.jpg", "chess-king.png"];
+    iconLoad(imgs, 'about-me', 'about-me-container');
+
+    let projects = await Util.getJSON('./scripts/database/projects.json');
     let projectNums = [0, 1, 2];
     searchItem(projects);
     populateProjects(projects, projectNums);
     menuShift(projects, projectNums);
     projectSelect(projectNums);
-}
-
-function toolBarStripes(n) {
-    const stripesRef = document.getElementsByClassName('stripes');
-
-    for (let i = 0; i < stripesRef.length; i++) {
-        if (n[5]) {
-            stripesRef[i].style.backgroundImage = "linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(355, 255, 0, 40%)" +
-                                                    " 27% 73%, rgb(0, 0, 0, 0%) 75% 100%)";
-        } else if (!n[3]) {
-            stripesRef[i].style.backgroundImage = "linear-gradient(-100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%)" +
-                                                    " 27% 73%, rgb(0, 0, 0, 0%) 75% 100%)";
-        }
-
-        stripesRef[i].style.left = n[i] + "vw";
-    }
-
-    // Determine when the stripes are reversing.
-    if (n[0] >= 100) n[3] = true;
-    else if (n[3] && n[2] <= -5) n[3] = false;
-    if (n[1] >= 100) n[4] = true;
-    else if (n[4] && n[1] <= -5) n[4] = false;
-    if (n[2] >= 100) n[5] = true;
-    else if (n[5] && n[0] <= -5) n[5] = false;
-
-    // Update the positions of the stripes.
-    if (!n[3] && !n[4] && !n[5]) n[0] += 0.1;
-    else if (n[5]) n[0] -= 0.1;
-    if (!n[4] && !n[5] && n[0] > 0) n[1] += 0.1;
-    else if (n[4] && n[0] <= 95) n[1] -= 0.1;
-    if (!n[5] && n[1] > 0) n[2] += 0.1;
-    else if (n[3] && n[1] <= 95) n[2] -= 0.1;
+    projectShadows();
 }
 
 function messageDisplay(msgs) {
@@ -127,32 +90,9 @@ function copyGmail() {
     });
 }
 
-function pictureDelay() {
-    const introductionRef = document.getElementById('about-me');
-    let cnt = 0;
-
-    // Detect when a user clicks the paragraph and prepare the animation.
-    introductionRef.addEventListener('click', function() {
-        const pictureAnchorRef = document.getElementById('picture-anchor');
-        const pictureRef = document.getElementsByClassName('picture-animated');
-        let len = pictureRef.length, k = pictureAnchorRef.offsetLeft + 10;
-
-        // If animations are active, don't allow reanimations.
-        if (cnt == 3) return;
-
-        for (let i = 0; i < len; i++) {
-            // Add animation to each image with an increasing amount of delay.
-            pictureRef[i].animate([ {top: "0px", left: "0px"}, {top: pictureAnchorRef.offsetTop + "px", left: k + "px", visibility: "visible"} ], { duration: 2000, delay: cnt * 1000, iterations: 1, fill: "forwards" });
-            cnt += 1;
-            k += 80;
-        }
-    });
-}
-
-function iconLoad() {
-    const skillRef = document.getElementById('qualification');
-    const skillContainerRef = document.getElementById('skill-container');
-    const iconNames = ["java-icon","python-icon","c-icon","cplusplus-icon","haskell-icon","javascript-icon","html-icon","css-icon"];
+function iconLoad(iconNames, divRef, containerRef) {
+    const skillRef = document.getElementById(divRef);
+    const skillContainerRef = document.getElementById(containerRef);
     let len = iconNames.length, n = 0.5;
 
     skillRef.addEventListener('click', function() {
@@ -161,7 +101,7 @@ function iconLoad() {
                 // Create a new icon and set the following properties.
                 const newIcon = document.createElement('img');
                 newIcon.setAttribute('class', 'icon-load');
-                newIcon.src = "./media/images/about-me/"+ iconNames[i] + ".png";
+                newIcon.src = "./media/images/about-me/"+ iconNames[i];
                 newIcon.style.width = "35px";
                 newIcon.style.marginBottom = "5px";
         
@@ -174,38 +114,6 @@ function iconLoad() {
             }
         }
     });
-}
-
-function projectShadows() {
-    /*
-     * leftProjectShift = n[0]; The size of the shadow from the left project.
-     * leftShadowInc = n[1]; The increase shadow object from the left project.
-     * leftShadowDec = n[2]; The decrease shadow object from the left project.
-     * middleProjectShift = n[3]; The size of the shadow from the middle project.
-     * middleShadowInc = n[4]; The increase shadow object from the middle project.
-     * middleShadowDec = n[5]; The decrease shadow object from the middle project.
-     * rightProjectShift = n[6]; The size of the shadow from the right project.
-     * rightShadowInc = n[7]; The increase shadow object from the right project.
-     * rightShadowDec = n[8]; The decrease shadow object from the right project.
-     */
-    let n = [250, null, null, 250, null, null, 250, null, null];
-    const projectRefs = document.getElementsByClassName('project-box')
-    const boxRefs = [projectRefs[0], projectRefs[1], projectRefs[2]];
-
-    // Cast shadows on projects that are hovered.
-    for (let i = 0; i < 3; i++) {
-        boxRefs[i].addEventListener('mouseover', function() {
-            // Stop increasing and begin to decrease.
-            clearInterval(n[3 * i + 1]);
-            n[3 * i + 2] = setInterval(shadowShift, 3, n, 3 * i, true);
-        });
-
-        boxRefs[i].addEventListener('mouseout', function() {
-            // Stop decreasing and begin to increase.
-            clearInterval(n[3 * i + 2]);
-            n[3 * i + 1] = setInterval(shadowShift, 15, n, 3 * i, false);
-        });
-    }
 }
 
 function shadowShift(n, idx, isDec) {
@@ -329,6 +237,38 @@ function projectSelect(projectNums) {
     for (let i = 0; i < n; i++) {
         projectLinksRef[i].addEventListener('click', function() {
             localStorage.setItem('project-idx', projectNums[i]);
+        });
+    }
+}
+
+function projectShadows() {
+    /*
+     * leftProjectShift = n[0]; The size of the shadow from the left project.
+     * leftShadowInc = n[1]; The increase shadow object from the left project.
+     * leftShadowDec = n[2]; The decrease shadow object from the left project.
+     * middleProjectShift = n[3]; The size of the shadow from the middle project.
+     * middleShadowInc = n[4]; The increase shadow object from the middle project.
+     * middleShadowDec = n[5]; The decrease shadow object from the middle project.
+     * rightProjectShift = n[6]; The size of the shadow from the right project.
+     * rightShadowInc = n[7]; The increase shadow object from the right project.
+     * rightShadowDec = n[8]; The decrease shadow object from the right project.
+     */
+    let n = [250, null, null, 250, null, null, 250, null, null];
+    const projectRefs = document.getElementsByClassName('project-box')
+    const boxRefs = [projectRefs[0], projectRefs[1], projectRefs[2]];
+
+    // Cast shadows on projects that are hovered.
+    for (let i = 0; i < 3; i++) {
+        boxRefs[i].addEventListener('mouseover', function() {
+            // Stop increasing and begin to decrease.
+            clearInterval(n[3 * i + 1]);
+            n[3 * i + 2] = setInterval(shadowShift, 3, n, 3 * i, true);
+        });
+
+        boxRefs[i].addEventListener('mouseout', function() {
+            // Stop decreasing and begin to increase.
+            clearInterval(n[3 * i + 2]);
+            n[3 * i + 1] = setInterval(shadowShift, 15, n, 3 * i, false);
         });
     }
 }

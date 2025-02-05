@@ -1,0 +1,19 @@
+Breakdown Last Updated: Sep 28, 2024
+```Link
+Link to project repository: Repository
+https://github.com/damiyu/mnist-neural-network
+```
+
+# Purpose:
+I plan to specialize in machine learning, so it would be vital to understand both the framework and implementation of different models.
+After taking introductory courses in machine learning and deep learning at UCSD, I want to explore a "vanilla" implementation of a neural network.
+An FCN is a good starting point because it is simple and is the foundation for other high-order models like CNNs, BERTs, and GPTs.
+Because a lot of linear algebra and calculus is involved, I hope to improve my math skills.
+
+# Background:
+
+# Implementation:
+
+# Results and Mock Paper:
+
+# Conclusion:
