@@ -3,19 +3,9 @@ import * as Util from './utilities.js';
 init();
 
 async function init() {
-    /*
-     * leftStripePos = n[0]; The position of the left-most stripe.
-     * middleStripePos = n[1]; The position of the center stripe.
-     * rightStripePos = n[2]; The position of the right-most stripe.
-     * isLeftReverse = n[3]; A boolean to check when it's time to reverse the left stripe.
-     * isMiddleReverse = n[4]; A boolean to check when it's time to reverse the middle stripe.
-     * isRightReverse = n[5]; A boolean to check when it's time to reverse the right stripe.
-     * bounceCnt = n[6]; The number of times the loading bubbles have bounced.
-     */
-    let n = [-5, -5, -5, false, false, false, 0];
-    setInterval(toolBarStripes, 10, n);
+    let n = [0];
 
-    let projects = await Util.getJSON('../database/projects.json'), selectProject = projects[localStorage.getItem('project-idx')];
+    let projects = await Util.getJSON('../scripts/database/projects.json'), selectProject = projects[localStorage.getItem('project-idx')];
     selectProject = selectProject != null ? selectProject : projects[0];
     let msgs = ["Loading...\0", selectProject.title + "...\0"];
     messageDisplay(msgs);
@@ -32,38 +22,6 @@ async function init() {
         loading.style.opacity = 0;
         window.scrollTo(0, 0);
     });
-}
-
-function toolBarStripes(n) {
-    const stripesRef = document.getElementsByClassName('stripes');
-
-    for (let i = 0; i < stripesRef.length; i++) {
-        if (n[5]) {
-            stripesRef[i].style.backgroundImage = "linear-gradient(100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(355, 255, 0, 40%)" +
-                                                    " 27% 73%, rgb(0, 0, 0, 0%) 75% 100%)";
-        } else if (!n[3]) {
-            stripesRef[i].style.backgroundImage = "linear-gradient(-100deg, rgb(0, 0, 0, 0%) 0% 25%, rgb(255, 255, 255, 40%)" +
-                                                    " 27% 73%, rgb(0, 0, 0, 0%) 75% 100%)";
-        }
-
-        stripesRef[i].style.left = n[i] + "vw";
-    }
-
-    // Determine when the stripes are reversing.
-    if (n[0] >= 100) n[3] = true;
-    else if (n[3] && n[2] <= -5) n[3] = false;
-    if (n[1] >= 100) n[4] = true;
-    else if (n[4] && n[1] <= -5) n[4] = false;
-    if (n[2] >= 100) n[5] = true;
-    else if (n[5] && n[0] <= -5) n[5] = false;
-
-    // Update the positions of the stripes.
-    if (!n[3] && !n[4] && !n[5]) n[0] += 0.1;
-    else if (n[5]) n[0] -= 0.1;
-    if (!n[4] && !n[5] && n[0] > 0) n[1] += 0.1;
-    else if (n[4] && n[0] <= 95) n[1] -= 0.1;
-    if (!n[5] && n[1] > 0) n[2] += 0.1;
-    else if (n[3] && n[1] <= 95) n[2] -= 0.1;
 }
 
 function messageDisplay(msgs) {

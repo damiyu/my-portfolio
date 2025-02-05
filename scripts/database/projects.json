@@ -20,7 +20,7 @@
                   "CSS3": "CSS3 was used to control the color scheme of the website to make the website more vibrant. I also used CSS3 to create some passive background animations for visual purposes."},
         "text": "../scripts/database/breakdowns/leetcode.txt",
         "number": 2,
-        "stars": 2.5,
+        "stars": 2,
         "type": "AD"
     },
     {
@@ -30,8 +30,18 @@
         "skill": {"Java": "Java was used for object-oriented programming with multiple different classes. I used Java libraries like Scanner and JFrame. The scanner was used to read user input and to read text files. JFrame was used to create a simple GUI to make the program simpler."},
         "text": "../scripts/database/breakdowns/grader.txt",
         "number": 3,
-        "stars": 3,
+        "stars": 2.5,
         "type": "AD"
+    },
+    {
+        "title": "MNIST Neural Network",
+        "image": "./media/images/projects/neural/neural.png",
+        "abstract": "TODO",
+        "skill": {"Python": "The entire model is written with vanilla Python plus NumPy for basic matrix operations and manipulation."},
+        "text": "../scripts/database/breakdowns/neural.txt",
+        "number": 4,
+        "stars": 4.5,
+        "type": "DD"
     },
     {
         "title": "Rating Predictor",
@@ -39,7 +49,7 @@
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
-        "number": 4,
+        "number": 5,
         "stars": 3.5,
         "type": "IP"
     },
@@ -49,7 +59,7 @@
         "abstract": "Currently being developed or breakdown is not finished.",
         "skill": {},
         "text": "../scripts/database/breakdowns/zeta.txt",
-        "number": 5,
+        "number": 6,
         "stars": 4,
         "type": "IP"
     }
